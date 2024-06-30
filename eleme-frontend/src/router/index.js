@@ -2,12 +2,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '../views/HomePage.vue'
 import NewPage from '../views/NewPage.vue'  // 导入新页面组件
+import OrderConfirm from '../views/OrderConfirm.vue'
 
 const routes = [
     {
-        path: '/',
+        path: '/HonePage',
         name: 'HomePage',
         component: HomePage
+    },
+    {
+        path: '/',
+        name: 'OrderConfirm',
+        component: OrderConfirm
     },
     {
         path: '/new-page',
