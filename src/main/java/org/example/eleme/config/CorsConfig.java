@@ -14,9 +14,10 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:8081")  // Vue 项目运行的端口
+                        .allowedOrigins("http://localhost:8081")  // Vue项目运行的端口
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowCredentials(true);
+                        .allowCredentials(true)
+                        .maxAge(3600);  // 预检请求的有效期，单位秒
             }
         };
     }
