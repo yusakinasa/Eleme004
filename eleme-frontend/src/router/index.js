@@ -4,6 +4,7 @@ import HomePage from '../views/HomePage.vue'
 import NewPage from '../views/NewPage.vue'  // 导入新页面组件
 import OrderConfirm from '../views/OrderConfirm.vue'
 import LogIn from '../views/LogIn.vue'
+import MenuSelection from '../views/MenuSelection.vue'
 
 const routes = [
     {
@@ -25,6 +26,12 @@ const routes = [
         path: '/',  // 设置登录页面的路由路径
         name: 'LogIn',
         component: LogIn  // 设置路由指向 LogIn 组件
+    },
+    {
+//        path: '/shop/:id/menu',  // 设置不同商店选择菜品路由路径
+        path: '/shop-menu', // 设置选择菜品路由
+        name: 'MenuSelection',
+        component: MenuSelection  // 设置路由指向选择菜品组件
     }
 ]
 
