@@ -1,24 +1,27 @@
 package org.example.eleme.model;
 
+import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import javax.persistence.*;
 
-@Entity
-@Table(name = "user")
+
+@TableName("user")
 @Data
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @TableId(type = IdType.AUTO)
     private Long user_id;
-
-    @Column(nullable = false, unique = true)
     private String username;
-
-    @Column(nullable = false)
     private String password;
 
-//    private String email;
-
     private String phone;
+
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
+    }
 }
