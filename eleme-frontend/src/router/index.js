@@ -23,13 +23,15 @@ const routes = [
         component: NewPage  // 设置路由指向新页面组件
     },
     {
-        path: '/',  // 设置登录页面的路由路径
+        // path: '/',  // 设置登录页面的路由路径
+        path:'/log-in',
         name: 'LogIn',
         component: LogIn  // 设置路由指向 LogIn 组件
     },
     {
 //        path: '/shop/:id/menu',  // 设置不同商店选择菜品路由路径
-        path: '/shop-menu', // 设置选择菜品路由
+//         path: '/shop-menu', // 设置选择菜品路由
+        path:'/',
         name: 'MenuSelection',
         component: MenuSelection  // 设置路由指向选择菜品组件
     }
