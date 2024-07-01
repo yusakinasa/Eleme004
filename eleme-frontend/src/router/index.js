@@ -2,8 +2,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import OrderConfirm from '../views/OrderConfirm.vue'
-import LogIn from '../views/LogIn.vue'
+import Log from '../views/Log.vue'
 import ShopSelection from '../views/ShopSelection.vue'
+import MenuSelection from "../views/MenuSelection.vue";
+
 
 const routes = [
     {
@@ -12,14 +14,19 @@ const routes = [
         component: OrderConfirm
     },
   {
-        path: '/',  // 设置登录页面的路由路径
-        name: 'LogIn',
-        component: LogIn  // 设置路由指向 LogIn 组件
+        path: '/',
+        name: 'Log',
+        component: Log
     },
     {
         path: '/shop-selection',
         name: 'ShopSelection',
         component: ShopSelection
+    },
+    {
+        path: '/menu-selection',
+        name: 'MenuSelection',
+        component: MenuSelection
     }
 ]
 

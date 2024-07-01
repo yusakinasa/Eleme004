@@ -5367,7 +5367,7 @@ safe-buffer@5.1.2:
 
 sass-loader@^14.2.1:
   version "14.2.1"
-  resolved "https://registry.npmjs.org/sass-loader/-/sass-loader-14.2.1.tgz"
+  resolved "https://registry.npmmirror.com/sass-loader/-/sass-loader-14.2.1.tgz"
   integrity sha512-G0VcnMYU18a4N7VoNDegg2OuMjYtxnqzQWARVWCIVSZwJeiL9kg8QMsuIZOplsJgTzZLF6jGxI3AClj8I9nRdQ==
   dependencies:
     neo-async "^2.6.2"
