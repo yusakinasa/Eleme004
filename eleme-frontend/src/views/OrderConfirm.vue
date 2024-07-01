@@ -3,23 +3,39 @@
     <h1>确认订单</h1>
     <div class="info">
       <div class="selectAddress">选择收货地址</div>
-      <div class="address">华中科技大学</div>
-      <div class="contact">张三 123456789</div>
-      <div class="moreAddress" @click="toggleAddressDropdown">{{ moreAddressesVisible ? '收起' : '更多' }}</div>
+      <div class="shipping-info">
+        <div class="address" v-if="!editingShippingInfo">
+          地址：{{ selectedShippingInfo.address }}     联系人：{{ selectedShippingInfo.contactName }}     联系电话：{{ selectedShippingInfo.phoneNumber }}
+        </div>
+        <div v-else>
+          <input type="text" v-model="newShippingInfo.address" placeholder="请输入地址">
+          <input type="text" v-model="newShippingInfo.contactName" placeholder="请输入联系人姓名">
+          <input type="text" v-model="newShippingInfo.phoneNumber" placeholder="请输入联系电话">
+          <button @click="saveShippingInfo">保存</button>
+          <button @click="cancelEditShippingInfo">取消</button>
+        </div>
+        <div class="moreAddress" @click="toggleAddressDropdown">{{ moreAddressesVisible ? '收起' : '更多' }}</div>
+      </div>
     </div>
 
-    <!-- 更多地址下拉框 -->
+    <!-- 更多地址列表 -->
     <div v-if="moreAddressesVisible" class="more-addresses">
-      <select v-model="selectedAddress">
-        <option v-for="(address, index) in addresses" :key="index" :value="address">{{ address }}</option>
-      </select>
-    </div>
-
-    <!-- 添加新地址表单 -->
-    <div v-if="addingNewAddress" class="add-new-address">
-      <input type="text" v-model="newAddress" placeholder="请输入新地址">
-      <button @click="addNewAddress">添加</button>
-      <button @click="cancelAddAddress">取消</button>
+      <div v-for="(address, index) in addresses" :key="index" class="address-item">
+        <label class="address-item-content">
+          <input type="radio" :checked="index === selectedAddressIndex" @change="selectDefaultAddress(index)">
+          <span>地址：{{ address.address }} 联系人：{{ address.contactName }} 联系电话：{{ address.phoneNumber }}</span>
+        </label>
+      </div>
+      <div v-if="!addingNewAddress" class="add-new-address">
+        <span @click="toggleAddingNewAddress">添加新地址</span>
+      </div>
+      <div v-if="addingNewAddress" class="add-new-address">
+        <input type="text" v-model="newContactName" placeholder="联系人姓名">
+        <input type="text" v-model="newPhoneNumber" placeholder="联系电话">
+        <input type="text" v-model="newAddress" placeholder="请输入新地址">
+        <button @click="addNewAddress">确定</button>
+        <button @click="cancelAddAddress">取消</button>
+      </div>
     </div>
 
     <!-- 主要内容区域 -->
@@ -28,7 +44,8 @@
       <div class="delivery-time">
         <label>选择配送时间：</label>
         <ul>
-          <li v-for="(option, index) in deliveryOptions" :key="index" @click="selectDeliveryTime(option)">
+          <li v-for="(option, index) in deliveryOptions" :key="index">
+            <input type="radio" :value="option.value" v-model="selectedDeliveryTime">
             {{ option.label }}
           </li>
         </ul>
@@ -37,47 +54,43 @@
         </div>
       </div>
 
-      <!-- 订单信息 -->
-      <div class="order-item">
-        <div class="store-info">
-          氢气层(华科东校区店) - 商家自配送
-        </div>
-        <div class="item">
-          <div class="item-info">
-            <span class="discount">折</span> 葡国奶油焗饭+原味鸡块+雪碧
+      <!-- 购物清单 -->
+      <div class="shopping-list-container">
+        <div class="shopping-list">
+          <div class="store-info">
+            氢气层(华科东校区店) - 商家自配送
           </div>
-          <div class="price">¥29.9</div>
-        </div>
-        <div class="extra-fees">
-          <div>打包费 ¥2.5</div>
-          <div>配送费 ¥0 (免配送费)</div>
-        </div>
-        <div class="discount-info">
-          <div class="discount">
-            已优惠 ¥28
+          <div class="item" v-for="(item, index) in shoppingCart" :key="index">
+            <div class="item-info">
+              {{ item.name }}
+            </div>
+            <div class="price">¥{{ item.price }}</div>
           </div>
+        </div>
+        <div class="subtotal">
           <div class="total">
-            小计 ¥32.4
-          </div>
-          <div class="coupon">
-            饿了么红包 (未选红包, 最高6元可用)
+            小计 ¥{{ calculateSubtotal() }}
           </div>
         </div>
       </div>
+
     </div>
 
     <!-- 支付方式 -->
     <div class="payment-method">
       <div class="payment-option">
-        <img src="//alipay-logo.png" alt="支付宝Logo" class="payment-logo">
-        <label for="payment">支付方式：</label>
-        <select id="payment">
-          <option value="alipay" selected>支付宝</option>
-          <option value="wechatPay">微信支付</option>
-        </select>
+        <input type="radio" id="alipay" name="paymentMethod" value="alipay" v-model="selectedPaymentMethod">
+        <label for="alipay">
+          <img src="../assets/alipay-logo.png" alt="支付宝Logo" class="payment-logo">
+          <span class="payment-text">支付宝</span>
+        </label>
       </div>
       <div class="payment-option">
-        <img src="//wechatPay-logo.png" alt="微信支付Logo" class="payment-logo">
+        <input type="radio" id="wechatPay" name="paymentMethod" value="wechatPay" v-model="selectedPaymentMethod">
+        <label for="wechatPay">
+          <img src="../assets/wechatPay-logo.png" alt="微信支付Logo" class="payment-logo">
+          <span class="payment-text">微信支付</span>
+        </label>
       </div>
     </div>
 
@@ -95,11 +108,35 @@ export default {
     return {
       selectedDeliveryTime: '', // 初始化选中的配送时间
       deliveryOptions: [], // 存储配送时间选项的数组
-      moreAddressesVisible: false, // 控制更多地址下拉框的显示状态
+      moreAddressesVisible: false, // 控制更多地址列表的显示状态
       addingNewAddress: false, // 控制添加新地址表单的显示状态
-      addresses: ['地址1', '地址2', '地址3'], // 示例地址列表
-      selectedAddress: '', // 用于存储选中的地址
-      newAddress: '' // 用于存储用户输入的新地址
+      addresses: [
+        { contactName: '张三', phoneNumber: '123456789', address: '地址1' },
+        { contactName: '李四', phoneNumber: '987654321', address: '地址2' },
+        { contactName: '王五', phoneNumber: '135792468', address: '地址3' }
+      ], // 示例地址列表
+      selectedAddressIndex: 0, // 选中的地址索引
+      selectedShippingInfo: {
+        contactName: '张三',
+        phoneNumber: '123456789',
+        address: '地址1'
+      }, // 选中的收货信息对象
+      newContactName: '', // 新的联系人姓名
+      newPhoneNumber: '', // 新的联系电话
+      newAddress: '', // 新的地址
+      selectedPaymentMethod: 'alipay', // 初始选择支付宝支付
+      editingShippingInfo: false,
+      newShippingInfo: {
+        contactName: '张三',
+        phoneNumber: '123456789',
+        address: '地址1'
+      }, // 默认收货信息对象
+      shoppingCart: [
+        { name: '葡国奶油焗饭+原味鸡块+雪碧', price: '29.9' },
+        { name: '某某商品', price: '20' },
+        { name: '新商品1', price: '15.5' },
+        { name: '新商品2', price: '12.3' }
+      ] // 购物车中的商品列表
     };
   },
   created() {
@@ -110,7 +147,7 @@ export default {
       const now = new Date();
       const currentTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
       this.deliveryOptions = [
-        { label: `立即送出（${currentTime}）`, value: 'now' }
+        { label: `立即送出（${currentTime}）`, value: '立即送出' }
       ];
 
       // Generate delivery options for the next few hours
@@ -131,9 +168,6 @@ export default {
 
       this.selectedDeliveryTime = this.deliveryOptions[0].value; // 默认选择第一个选项
     },
-    selectDeliveryTime(option) {
-      this.selectedDeliveryTime = option.value;
-    },
     submitOrder() {
       alert('订单已提交');
       // 在此处添加提交订单的逻辑
@@ -141,16 +175,57 @@ export default {
     toggleAddressDropdown() {
       this.moreAddressesVisible = !this.moreAddressesVisible;
     },
+    toggleAddingNewAddress() {
+      this.addingNewAddress = !this.addingNewAddress;
+    },
+    saveShippingInfo() {
+      if (this.newShippingInfo.address.trim() !== '' && this.newShippingInfo.contactName.trim() !== '' && this.newShippingInfo.phoneNumber.trim() !== '') {
+        this.editingShippingInfo = false;
+        this.selectedShippingInfo = {
+          address: this.newShippingInfo.address,
+          contactName: this.newShippingInfo.contactName,
+          phoneNumber: this.newShippingInfo.phoneNumber
+        };
+      }
+    },
+    cancelEditShippingInfo() {
+      this.editingShippingInfo = false;
+    },
     addNewAddress() {
-      if (this.newAddress.trim() !== '') {
-        this.addresses.push(this.newAddress);
+      if (this.newContactName.trim() !== '' && this.newPhoneNumber.trim() !== '' && this.newAddress.trim() !== '') {
+        this.addresses.push({
+          contactName: this.newContactName,
+          phoneNumber: this.newPhoneNumber,
+          address: this.newAddress
+        });
+        this.newContactName = '';
+        this.newPhoneNumber = '';
         this.newAddress = '';
         this.addingNewAddress = false;
+        this.moreAddressesVisible = true;
       }
     },
     cancelAddAddress() {
+      this.newContactName = '';
+      this.newPhoneNumber = '';
       this.newAddress = '';
       this.addingNewAddress = false;
+    },
+    selectDefaultAddress(index) {
+      this.selectedAddressIndex = index;
+      this.selectedShippingInfo = {
+        address: this.addresses[index].address,
+        contactName: this.addresses[index].contactName,
+        phoneNumber: this.addresses[index].phoneNumber
+      };
+      this.moreAddressesVisible = false; // 收起更多地址列表
+    },
+    calculateSubtotal() {
+      let subtotal = 0;
+      this.shoppingCart.forEach(item => {
+        subtotal += parseFloat(item.price);
+      });
+      return subtotal.toFixed(2);
     }
   }
 };
@@ -158,29 +233,47 @@ export default {
 
 <style scoped>
 .order-confirmation {
-  padding: 16px;
-  background-color: #f0f0f0;
-  text-align: center;
-}
-
-h1 {
-  margin-top: 0;
-}
-
-.selectAddress {
-  font-size: 18px; /* 调整字号大小 */
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
 }
 
 .info {
-  background-color: white;
-  padding: 16px;
-  margin-bottom: 16px;
-  border-radius: 8px;
+  margin-bottom: 20px;
 }
 
-.address,
-.contact {
-  margin-bottom: 8px;
+.selectAddress {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.shipping-info {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.address-info label {
+  flex: 0 0 80px; /* 固定标签宽度 */
+  margin-right: 10px;
+}
+
+.address-info span {
+  flex-grow: 1; /* 自动扩展内容区域 */
+  display: inline-block;
+}
+
+.edit-shipping-info input {
+  width: calc(100% - 20px);
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.save-cancel-buttons button {
+  margin-right: 10px;
 }
 
 .moreAddress {
@@ -188,114 +281,143 @@ h1 {
   color: blue;
 }
 
+.more-addresses {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.add-new-address {
+  margin-top: 10px;
+}
+
 .main-content {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 16px;
+  align-items: flex-start; /* 确保垂直对齐方式为顶部对齐 */
 }
 
 .delivery-time {
-  flex: 1;
-  background-color: white;
-  padding: 16px;
-  border-radius: 8px;
+  flex: 1; /* 占据左侧空间 */
+  margin-right: 20px; /* 可根据需要调整右侧间距 */
+  padding: 10px; /* 添加内边距 */
+  border: 1px solid #ccc; /* 添加边框样式 */
+  margin-bottom: 20px; /* 底部外边距 */
 }
 
 .delivery-time label {
-  margin-right: 8px;
+  font-weight: bold;
 }
 
 .delivery-time ul {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
 }
 
 .delivery-time li {
   cursor: pointer;
-  padding: 8px 16px;
-  margin-bottom: 8px;
-  background-color: white;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-.delivery-time li:hover {
-  background-color: #f0f0f0;
+  margin-bottom: 5px;
 }
 
 .selected-time {
-  margin-top: 8px;
-  font-weight: bold;
+  margin-top: 10px;
 }
 
-.order-item {
-  flex: 1;
-  background-color: white;
-  padding: 16px;
-  border-radius: 8px;
+.shopping-list-container {
+  flex: 2;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+  max-height: 218px; /* 调整为适当的高度 */
+  overflow-y: auto;
+  position: relative;
+}
+
+.shopping-list-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  background-color: #f0f0f0;
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  bottom: 0;
+  z-index: 1;
 }
 
 .store-info {
   font-weight: bold;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .item {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
 }
 
-.extra-fees {
-  margin-top: 8px;
+.item-info {
+  flex-grow: 1;
 }
 
-.discount-info {
-  background-color: white;
-  padding: 16px;
-  border-radius: 8px;
+.price {
+  font-weight: bold;
 }
+
+.subtotal {
+  border-top: 1px dashed #ccc;
+  padding-top: 10px;
+  margin-top: 10px;
+  background-color: #fff;
+  position: sticky;
+  bottom: 0;
+}
+
+.total {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
 
 .payment-method {
-  margin-top: 16px; /* 调整顶部间距 */
   display: flex;
-  align-items: center; /* 垂直居中 */
-  justify-content: center; /* 水平居中 */
-  background-color: white;
+  justify-content: space-between; /* 或者 space-around，根据需要选择 */
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
 }
 
 .payment-option {
   display: flex;
-  align-items: center;
-  margin-right: 20px; /* 调整支付选项之间的间距 */
+  align-items: center; /* 垂直居中对齐 */
 }
 
-.payment-option img.payment-logo {
-  width: 40px; /* 调整logo的宽度 */
-  height: auto; /* 保持宽高比 */
-  margin-right: 8px; /* 调整logo与文字之间的间距 */
+.payment-logo {
+  width: 50px; /* 调整图片宽度 */
+  height: auto; /* 保持高度自适应 */
+  margin-right: 10px;
 }
 
-.payment-method label {
-  margin-right: 8px; /* 调整标签和下拉框之间的间距 */
+.payment-text {
+  font-size: 16px; /* 根据需要调整文字大小 */
+  line-height: 50px; /* 与图片高度相同，确保垂直居中对齐 */
 }
 
-.payment-method select {
-  padding: 8px; /* 调整下拉框内部填充 */
+.submit-button {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.more-addresses {
-  margin-top: 16px;
-}
-
-.more-addresses input[type="text"] {
-  padding: 8px;
-  margin-right: 8px;
-}
-
-.more-addresses button {
-  padding: 8px 16px;
-  margin-right: 8px;
+button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
   cursor: pointer;
 }
 
+button:hover {
+  background-color: #0056b3;
+}
 </style>
