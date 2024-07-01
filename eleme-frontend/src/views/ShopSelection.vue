@@ -18,10 +18,15 @@
     </header>
 
     <nav class="navigation">
-      <button class="nav-button">评分↓</button>
-      <button class="nav-button">人气↓</button>
-      <button class="nav-button">距离↑</button>
-      <button class="nav-button">人均价↑</button>
+      <button
+          v-for="(button, index) in buttons"
+          :key="index"
+          :class="{ active: button.isActive }"
+          @click="handleClick(index)"
+          class="nav-button"
+      >
+        {{ button.label }}
+      </button>
     </nav>
 
     <div class="store-list">
@@ -45,6 +50,12 @@ export default {
   name: 'ElemePage',
   data() {
     return {
+      buttons: [
+        { label: '评分↓', isActive: false, order: 'desc' },
+        { label: '人气↓', isActive: false, order: 'desc' },
+        { label: '距离↓', isActive: false, order: 'desc' },
+        { label: '人均价↑', isActive: false, order: 'asc' } // 假设初始为升序
+      ],
       stores: [
         {
           name: '安格斯牛肉拌饭（华科东校区店）',
@@ -70,6 +81,21 @@ export default {
         // 可以继续添加更多商店
       ]
     };
+  },
+  methods: {
+    handleClick(index) {
+      // 在点击一个按钮时，改变其他按钮的状态
+      this.buttons.forEach((button, i) => {
+        if (i === index) {
+          // 切换当前按钮的激活状态和排序顺序
+          button.isActive = true;
+          button.order = button.order === 'asc' ? 'desc' : 'asc'; // 切换升降序
+          button.label = `${button.label.slice(0, -1)}${button.order === 'asc' ? '↑' : '↓'}`; // 更新标签
+        } else {
+          button.isActive = false; // 其他按钮变为非激活状态
+        }
+      });
+    }
   }
 };
 </script>
@@ -173,6 +199,10 @@ export default {
   background-color: #007bff; /* 设置悬停时的背景颜色，可以根据需要修改 */
 }
 
+/* 激活状态下的样式 */
+.nav-button.active {
+  background-color: #007bff; /* 保持蓝色 */
+}
 
 .store-list {
   margin: 0 20%;
