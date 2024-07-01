@@ -21,12 +21,17 @@
     <div class="content">
       <!-- 左边展示区域 -->
       <div class="left-view">
+      <div class="shop-info-container">
         <div class="shop-info">
           <h2>仙踪小鹿(江汉路步行街店)</h2>
           <p>地址: 江汉一路19号某某地层261-64室</p>
           <p>电话: 18671153965</p>
           <p>评分: 4.7 | 人均: 84元 | 月销量: 2000+单</p>
           <p>公告: 欢迎光临本店，祝您用餐愉快！</p>
+        </div>
+        <div class="shop-image">
+          <img src="shop.jpg" alt="shop">
+        </div>
         </div>
         <div class="menu-tabs">
           <span
@@ -317,5 +322,25 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.shop-info-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.shop-info {
+  flex: 1;
+}
+
+.shop-img {
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+.shop-img img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 </style>
