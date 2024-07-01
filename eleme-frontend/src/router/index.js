@@ -2,13 +2,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '../views/HomePage.vue'
 import NewPage from '../views/NewPage.vue'  // 导入新页面组件
+import OrderConfirm from '../views/OrderConfirm.vue'
 import LogIn from '../views/LogIn.vue'
+import ShopSelection from '../views/ShopSelection.vue'
 
 const routes = [
     {
         path: '/home-page',
         name: 'HomePage',
         component: HomePage
+    },
+    {
+        path: '/order-confirm',
+        name: 'OrderConfirm',
+        component: OrderConfirm
     },
     {
         path: '/new-page',
@@ -19,6 +26,11 @@ const routes = [
         path: '/',  // 设置登录页面的路由路径
         name: 'LogIn',
         component: LogIn  // 设置路由指向 LogIn 组件
+    },
+    {
+        path: '/shop-selection',
+        name: 'ShopSelection',
+        component: ShopSelection
     }
 ]
 
