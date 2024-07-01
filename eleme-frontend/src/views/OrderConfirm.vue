@@ -54,6 +54,7 @@
         </div>
       </div>
 
+
       <!-- 购物清单 -->
       <div class="shopping-list-container">
         <div class="shopping-list">
@@ -280,6 +281,7 @@ export default {
   cursor: pointer;
   color: blue;
 }
+
 
 .more-addresses {
   border: 1px solid #ccc;
