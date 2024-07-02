@@ -59,6 +59,7 @@ export default {
         });
         if (response.data.status === "success") {
           alert('登录成功');
+          this.$router.push({ name: 'ShopSelection' }); // 跳转到ShopSelection页面
         } else {
           alert('登录失败: ' + response.data.message);
         }
@@ -82,7 +83,7 @@ export default {
           alert('注册失败: ' + response.data.message);
         }
       } catch (error) {
-        alert('注册失败');
+        alert('账号已经存在' );
       }
     },
     updateCode(value) {
@@ -188,6 +189,7 @@ export default {
   white-space: nowrap;
 }
 </style>
+
 
 
 

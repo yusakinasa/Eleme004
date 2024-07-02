@@ -19,12 +19,21 @@ public class UserController {
     @PostMapping("/register")
     public Map<String, Object> register(@RequestBody User user) {
         Map<String, Object> response = new HashMap<>();
-        try {
-            userService.save(user);
-            response.put("status", "success");
-        } catch (Exception e) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("phone", user.getPhone());
+        User existingUser = userService.getOne(queryWrapper);
+
+        if (existingUser != null) {
             response.put("status", "error");
-            response.put("message", e.getMessage());
+            response.put("message", "账号已存在");
+        } else {
+            try {
+                userService.save(user);
+                response.put("status", "success");
+            } catch (Exception e) {
+                response.put("status", "error");
+                response.put("message", e.getMessage());
+            }
         }
         return response;
     }
@@ -40,7 +49,7 @@ public class UserController {
             response.put("status", "success");
         } else {
             response.put("status", "error");
-            response.put("message", "Invalid phone or password");
+            response.put("message", "账号或密码错误");
         }
         return response;
     }
@@ -52,5 +61,6 @@ public class UserController {
         return response;
     }
 }
+
 
 
