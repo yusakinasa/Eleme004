@@ -2,7 +2,7 @@
   <div class="login-register-wrapper">
     <div class="login-register-container">
       <div class="logo">
-        <img src="path/to/logo.png">
+        <img src="path/to/logo.png" alt="Logo">
         <h1>ELEME</h1>
       </div>
       <div class="tab-buttons">
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import ValidCode from '@/components/ValidCode'; // 导入验证码组件
 
 export default {
@@ -44,29 +45,51 @@ export default {
       registerPassword: '',
       registerCode: '',
       generatedCode: ''
-    }
+    };
   },
   methods: {
     toggleForm(isLogin) {
       this.isLogin = isLogin;
     },
-    handleLogin() {
-      // 登录处理逻辑
-      console.log('登录:', this.loginPhone, this.loginPassword);
+    async handleLogin() {
+      try {
+        const response = await axios.post('http://localhost:8081/user/login', {
+          phone: this.loginPhone,
+          password: this.loginPassword
+        });
+        if (response.data.status === "success") {
+          alert('登录成功');
+        } else {
+          alert('登录失败: ' + response.data.message);
+        }
+      } catch (error) {
+        alert('登录失败');
+      }
     },
-    handleRegister() {
-      // 注册处理逻辑
+    async handleRegister() {
       if (this.registerCode !== this.generatedCode) {
         alert('验证码错误');
         return;
       }
-      console.log('注册:', this.registerPhone, this.registerPassword, this.registerCode);
+      try {
+        const response = await axios.post('http://localhost:8081/user/register', {
+          phone: this.registerPhone,
+          password: this.registerPassword
+        });
+        if (response.data.status === "success") {
+          alert('注册成功');
+        } else {
+          alert('注册失败: ' + response.data.message);
+        }
+      } catch (error) {
+        alert('注册失败');
+      }
     },
     updateCode(value) {
       this.generatedCode = value;
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -165,4 +188,7 @@ export default {
   white-space: nowrap;
 }
 </style>
+
+
+
 
