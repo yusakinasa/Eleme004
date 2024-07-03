@@ -15,6 +15,7 @@
             <button>退出</button>
           </div>
         </header>
+    <div class="my-order-info">
     <h2>我的订单</h2>
     <div class="order-list">
       <div class="order" v-for="order in orders" :key="order.id">
@@ -32,6 +33,7 @@
           <button @click="viewOrder(order.id)">订单详情</button>
           <button @click="deleteOrder(order.id)">删除</button>
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -81,6 +83,12 @@ export default {
 .order-list {
   margin-top: 20px;
 }
+
+.my-order-info {
+  margin: 0 auto;
+  width: 80%;
+}
+
 .order {
   display: flex;
   justify-content: space-between;
@@ -99,16 +107,20 @@ export default {
 
 .header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  background-color: white;
-  padding: 16px;
-  margin-bottom: 16px;
-  border-radius: 8px;
+  padding: 1rem;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .logo {
-  width: 100px;
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 40px;
+  margin-right: 0.5rem;
 }
 
 .search-bar {
