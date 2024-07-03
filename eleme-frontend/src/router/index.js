@@ -2,7 +2,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import OrderConfirm from '../views/OrderConfirm.vue'
-import Log from '../views/Log.vue'
+import LogIn from '../views/LogIn.vue'
 import ShopSelection from '../views/ShopSelection.vue'
 import MenuSelection from "../views/MenuSelection.vue";
 
@@ -13,10 +13,10 @@ const routes = [
         name: 'OrderConfirm',
         component: OrderConfirm
     },
-  {
+    {
         path: '/',
-        name: 'Log',
-        component: Log
+        name: 'LogIn',
+        component: LogIn
     },
     {
         path: '/shop-selection',

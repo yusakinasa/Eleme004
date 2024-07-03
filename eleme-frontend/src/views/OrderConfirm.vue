@@ -103,6 +103,8 @@
 </template>
 
 <script>
+import router from "@/router";
+import axios from 'axios'; // 导入Axios库
 export default {
   name: 'OrderConfirmation',
   data() {
@@ -170,8 +172,29 @@ export default {
       this.selectedDeliveryTime = this.deliveryOptions[0].value; // 默认选择第一个选项
     },
     submitOrder() {
-      alert('订单已提交');
-      // 在此处添加提交订单的逻辑
+      // 准备发送到后端的数据
+      const orderData = {
+        shippingInfo: this.selectedShippingInfo,
+        deliveryTime: this.selectedDeliveryTime,
+        paymentMethod: this.selectedPaymentMethod,
+        shoppingCart: this.shoppingCart
+      };
+
+      // 实际的后端API端点URL；替换为您的后端API端点
+      const apiUrl = 'http://localhost:8080/';
+
+      // 使用Axios发送POST请求到后端
+      axios.post(apiUrl, orderData)
+          .then(() => {
+            alert('订单已提交');
+            router.push({ name: 'PayComplete' });
+          })
+          .catch(error => {
+            console.error('提交订单时出错:', error);
+            alert('提交订单时出错，请重试。');
+          });
+
+
     },
     toggleAddressDropdown() {
       this.moreAddressesVisible = !this.moreAddressesVisible;

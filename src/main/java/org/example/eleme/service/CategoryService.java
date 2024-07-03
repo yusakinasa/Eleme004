@@ -9,7 +9,7 @@ import java.util.List;
 public interface CategoryService extends IService<Category> {
 
 
-    public List<Category> getAllCategories() ;
+public List<Category> getAllCategories() ;
 
 //    public Category getCategoryById(Long id);
 //

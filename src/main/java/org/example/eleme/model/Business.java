@@ -13,13 +13,13 @@ import lombok.Data;
 public class Business {
 
     @TableId(type = IdType.AUTO)
-    private Long business_id;
+    private Long businessid;
     private String name;
-    private String image_url;
+    private String imageurl;
     private Float rating;
-    private Integer sales_volume;
+    private Integer sales;
     private Float distance;
-    private Float avg_price;
+    private Float avgprice;
     private String address;
     private String notice;
     private String phone;
