@@ -1,44 +1,30 @@
 <template>
-  <div class="menu-selection">
-    <!-- 顶部用户信息和搜索框 -->
-    <header class="header">
-      <div class="logo">
-        <img src="logo.png" alt="ELEME">
-        <span>ELEME</span>
-      </div>
-      <div class="search-bar">
-        <input type="text" placeholder="搜索">
-        <button>搜索</button>
-      </div>
-      <div class="user-info">
-        <span>user256</span>
-        <button>我的订单</button>
-        <button>退出</button>
-      </div>
-    </header>
+  <div class="eleme-page">
+    <!-- 使用 HeaderBar 组件 -->
+    <HeaderBar :username="username" />
 
     <!-- 主内容区域 -->
     <div class="content">
       <!-- 左边展示区域 -->
       <div class="left-view">
-      <div class="shop-info-container">
-        <div class="shop-info">
-          <h2>仙踪小鹿(江汉路步行街店)</h2>
-          <p>地址: 江汉一路19号某某地层261-64室</p>
-          <p>电话: 18671153965</p>
-          <p>评分: 4.7 | 人均: 84元 | 月销量: 2000+单</p>
-          <p>公告: 欢迎光临本店，祝您用餐愉快！</p>
-        </div>
-        <div class="shop-image">
-          <img src="shop.jpg" alt="shop">
-        </div>
+        <div class="shop-info-container">
+          <div class="shop-info">
+            <h2>仙踪小鹿(江汉路步行街店)</h2>
+            <p>地址: 江汉一路19号某某地层261-64室</p>
+            <p>电话: 18671153965</p>
+            <p>评分: 4.7 | 人均: 84元 | 月销量: 2000+单</p>
+            <p>公告: 欢迎光临本店，祝您用餐愉快！</p>
+          </div>
+          <div class="shop-image">
+            <img src="shop.jpg" alt="shop">
+          </div>
         </div>
         <div class="menu-tabs">
           <span
-            v-for="tab in tabs"
-            :key="tab"
-            :class="{ active: currentTab === tab }"
-            @click="currentTab = tab"
+              v-for="tab in tabs"
+              :key="tab"
+              :class="{ active: currentTab === tab }"
+              @click="currentTab = tab"
           >
             {{ tab }}
           </span>
@@ -85,7 +71,7 @@
         </div>
         <div class="total">
           <span>共计 {{ totalPrice }} ¥</span>
-          <button>去结算</button>
+          <button @click="RedirectToOrder">去结算</button>
         </div>
       </div>
     </div>
@@ -93,10 +79,16 @@
 </template>
 
 <script>
+import HeaderBar from '@/components/HeaderBar.vue';
+
 export default {
   name: 'MenuSelection',
+  components: {
+    HeaderBar,
+  },
   data() {
     return {
+      username: 'user256', // 使用固定的用户名作为示例
       tabs: ['推荐菜', '环境', '价目表', '官方相册', '品牌故事', '食品安全档案'],
       currentTab: '推荐菜',
       menuItems: [
@@ -162,71 +154,14 @@ export default {
         }
       }
     },
+    RedirectToOrder() {
+      this.$router.push({ name: 'OrderDetails' });
+    }
   },
 };
 </script>
 
 <style scoped>
-.menu-selection {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem;
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-}
-
-.logo img {
-  height: 40px;
-  margin-right: 0.5rem;
-}
-
-.search-bar {
-  display: flex;
-  align-items: center;
-}
-
-.search-bar input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.search-bar button {
-  padding: 0.5rem;
-  margin-left: 0.5rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-}
-
-.user-info button {
-  margin-left: 0.5rem;
-  padding: 0.5rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
 .content {
   display: flex;
   flex: 1;
@@ -331,11 +266,6 @@ export default {
 
 .shop-info {
   flex: 1;
-}
-
-.shop-img {
-  margin-left: 1rem;
-  flex-shrink: 0;
 }
 
 .shop-img img {

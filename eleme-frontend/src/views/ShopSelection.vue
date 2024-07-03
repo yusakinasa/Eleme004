@@ -1,22 +1,13 @@
 <template>
+    <!-- 使用 HeaderBar 组件 -->
+  <HeaderBar
+        :username="username"
+        @logo-click="onLogoClick"
+        @search="onSearch"
+        @view-orders="onViewOrders"
+        @logout="onLogout"
+    />
   <div class="eleme-page">
-    <!-- 顶部用户信息和搜索框 -->
-    <header class="header">
-      <div class="logo">
-        <img src="logo.png" alt="ELEME">
-        <span>ELEME</span>
-      </div>
-      <div class="search-bar">
-        <input type="text" placeholder="搜索">
-        <button>搜索</button>
-      </div>
-      <div class="user-info">
-        <span>user256</span>
-        <button>我的订单</button>
-        <button>退出</button>
-      </div>
-    </header>
-
     <nav class="navigation">
       <button
           v-for="(button, index) in buttons"
@@ -31,14 +22,14 @@
 
     <div class="store-list">
       <div v-for="(store, index) in stores" :key="index" class="store-item">
-        <img :src="store.imageurl" alt="店铺图片" class="store-image">
+        <img :src="store.image" alt="店铺图片" class="store-image">
         <div class="store-info">
           <h2 class="store-name">{{ store.name }}</h2>
           <div class="store-details">
             <span class="store-rating">{{ store.rating }}分</span>
             <span class="monthly-sales">月售{{ store.sales }}+</span>
             <span class="distance">{{ store.distance }}km</span>
-            <span class="avg-price">均价{{ store.avgprice }}元</span>
+            <span class="avg-price">¥{{ store.avg_price }}</span>
           </div>
         </div>
       </div>
@@ -47,24 +38,55 @@
 </template>
 
 <script>
+import HeaderBar from '@/components/HeaderBar.vue';
+
 export default {
   name: 'ElemePage',
+  components: {
+    HeaderBar
+  },
   data() {
     return {
+      username: 'user256',
       buttons: [
         { label: '评分↓', isActive: false, order: 'desc' },
         { label: '人气↓', isActive: false, order: 'desc' },
         { label: '距离↓', isActive: false, order: 'desc' },
         { label: '人均价↑', isActive: false, order: 'asc' }
       ],
-      stores: []  // 初始化为空，数据将从服务器获取
+      stores: [
+        {
+          name: '安格斯牛肉拌饭（华科东校区店）',
+          rating: 4.7,
+          sales: 2000,
+          distance: 1.5,
+          avg_price: 50,
+          image: '//path-to-store-image.png'
+        },
+        {
+          name: '安格斯牛肉拌饭（华科东校区店）',
+          rating: 4.7,
+          sales: 2000,
+          distance: 1.5,
+          avg_price: 50,
+          image: '//path-to-store-image.png'
+        },
+        {
+          name: '安格斯牛肉拌饭（华科东校区店）',
+          rating: 4.7,
+          sales: 2000,
+          distance: 1.5,
+          avg_price: 50,
+          image: '//path-to-store-image.png'
+        },
+      ]// stores: []  // 初始化为空，数据将从服务器获取
     };
   },
   methods: {
     handleClick(index) {
       this.buttons.forEach((button, i) => {
         if (i === index) {
-          if (button.isActive===true){
+          if (button.isActive === true) {
             button.order = button.order === 'asc' ? 'desc' : 'asc';
             button.label = `${button.label.slice(0, -1)}${button.order === 'asc' ? '↑' : '↓'}`;
           }
@@ -84,6 +106,18 @@ export default {
           .catch(error => {
             console.error('Error fetching stores:', error);
           });
+    },
+    onLogoClick() {
+      console.log('Logo clicked!');
+    },
+    onSearch(query) {
+      console.log('Search query:', query);
+    },
+    onViewOrders() {
+      console.log('View orders clicked!');
+    },
+    onLogout() {
+      console.log('Logout clicked!');
     }
   },
   created() {
@@ -95,78 +129,8 @@ export default {
 <style scoped>
 .eleme-page {
   padding: 16px;
-  background-color: #f0f0f0;
-  text-align: center;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   background-color: white;
-  padding: 16px;
-  margin-bottom: 16px;
-  border-radius: 8px;
-}
-
-.logo {
-  width: 100px;
-}
-
-.search-bar {
-  display: flex;
-  align-items: center;
-}
-
-.search-bar input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.search-bar button {
-  padding: 0.5rem;
-  margin-left: 0.5rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-}
-
-.user-info button {
-  margin-left: 0.5rem;
-  padding: 0.5rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.username {
-  margin-right: 8px;
-}
-
-.user-tag {
-  background-color: yellow;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-.order-history-button {
-  margin-left: 16px;
-  padding: 8px 16px;
-  background-color: #ff9800;
-  border: none;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
+  text-align: center;
 }
 
 .navigation {
@@ -189,11 +153,13 @@ export default {
 /* 鼠标悬停时的颜色渐变效果 */
 .nav-button:hover {
   background-color: #007bff; /* 设置悬停时的背景颜色，可以根据需要修改 */
+  color: white;
 }
 
 /* 激活状态下的样式 */
 .nav-button.active {
   background-color: #007bff; /* 保持蓝色 */
+  color: white;
 }
 
 .store-list {
@@ -210,6 +176,7 @@ export default {
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border: 1px solid;
 }
 
 .store-image {
@@ -225,7 +192,6 @@ export default {
 }
 
 .store-name {
-  margin: 0;
   font-size: 18px;
   margin-bottom: 8px;
 }
@@ -241,4 +207,7 @@ export default {
 .avg-price{
   font-size: 14px;
 }
+
+/* 原来的 header 样式已经被移动到 HeaderBar 组件中 */
+/* 其他样式保持不变 */
 </style>

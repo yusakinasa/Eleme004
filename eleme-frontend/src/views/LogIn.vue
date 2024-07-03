@@ -2,7 +2,7 @@
   <div class="login-register-wrapper">
     <div class="login-register-container">
       <div class="logo">
-        <img src="path/to/logo.png" alt="Logo">
+        <img src="@/assets/eleme-logo.png" alt="Logo">
         <h1>ELEME</h1>
       </div>
       <div class="tab-buttons">

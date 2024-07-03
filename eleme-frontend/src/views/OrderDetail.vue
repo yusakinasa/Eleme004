@@ -1,36 +1,38 @@
+<!-- src/views/OrderDetails.vue -->
 <template>
-  <div id="app" class="order-page">
-    <header>
-      <button class="logo-btn" @click="logoclick">
-        <img src="@/assets/eleme-logo.png" alt="Eleme Logo" class="logo"/>
-        <h1>ELEME</h1>
-      </button>
-      <button class="logout-btn" @click="logout">退出</button>
-    </header>
+    <!-- 使用 HeaderBar 组件 -->
+  <HeaderBar :username="username" />
+  <div class="order-page">
     <section class="order-details">
       <h2>订单详情</h2>
       <div class="main-info">
         <div class="order-summary">
           <h3>订单已完成</h3>
-          <p>感谢信任，期待再次光临</p>
+          <p style="text-align: center; font-weight: bold;">感谢信任，期待再次光临</p>
           <div class="contact-info">
-            <label>联系商家</label>
-            <input type="text" value="15826506260" readonly/>
+            <span>联系商家</span>
+            <span class="tel-num"> 15826506260</span>
           </div>
         </div>
         <div class="order-items">
-          <button class="shop-redirect-btn" @click="redirectToShop">氛气层（华科东校区店）></button>
-          <div class="item">
-            <span class="item-name">招牌咖喱鸡饭</span>
-            <span class="item-price">¥19.9</span>
-          </div>
-          <div class="item">
-            <span class="item-name">雪碧</span>
-            <span class="item-price">¥5</span>
+          <el-button class="shop-redirect-btn" type="text" @click="redirectToShop">氛气层（华科东校区店）></el-button>
+          <div class="order-items-list">
+            <div class="order-item" v-for="(item, index) in items" :key="index">
+              <div class="item-info">
+                <img :src="item.image" alt="商品图片" class="item-image">
+              </div>
+              <div class="item-details">
+                <span class="item-name">{{ item.name }}</span>
+                <span class="item-quantity">×{{ item.account }}</span>
+              </div>
+              <span class="item-price">¥{{ item.price }}</span>
+            </div>
           </div>
           <div class="order-summary-total">
-            <span class="total-label">总计</span>
-            <span class="total-price">¥25.9</span>
+            <div class="cost-info total">
+              <span class="label">总计：</span>
+              <span class="total-price">¥25.9</span>
+            </div>
           </div>
         </div>
       </div>
@@ -67,17 +69,35 @@
 </template>
 
 <script>
+import HeaderBar from '@/components/HeaderBar.vue';
+
 export default {
-  name: 'App',
+  name: 'OrderDetails',
+  components: {
+    HeaderBar
+  },
+  data() {
+    return {
+      username: 'user256',
+      items: [
+        {
+          name: '招牌咖喱鸡饭',
+          price: 19.9,
+          image: 'path/to/image1.jpg',
+          account: 1
+        },
+        {
+          name: '雪碧',
+          price: 5,
+          image: 'path/to/image2.jpg',
+          account: 1
+        },
+      ]
+    };
+  },
   methods: {
-    logoclick() {
-      this.$router.push({name: 'ShopSelection'});
-    },
-    logout() {
-      this.$router.push({name: 'Log'});
-    },
     redirectToShop() {
-      this.$router.push({name: 'ShopSelection'});
+      this.$router.push({ name: 'ShopSelection' });
     }
   }
 };
@@ -90,99 +110,84 @@ export default {
   padding: 20px;
 }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-}
-
-h1 {
-  margin: 10px;
-  font-size: 24px;
-  color: #333;
-}
-
-.logo {
-  height: 40px;
-}
-
-.logo-btn {
-  background: white;
-  cursor: pointer;
-  border: none;
-  display: flex;
-}
-
-.logout-btn {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-}
-
 .shop-redirect-btn {
-  background: white;
   border: none;
   cursor: pointer;
   margin-bottom: 10px;
   padding: 0;
   font-size: 20px;
   font-weight: bold;
+  text-align: left;
 }
 
 .main-info {
   display: flex;
 }
 
-
-.order-details {
-  margin: 20px 0 20px 0;
-}
-
 .order-summary {
   border: 1px solid #ddd;
-  padding: 50px;
+  padding: 30px;
   margin-right: 10px;
-  flex: 1;
+  flex: 2;
 }
 
 .order-items {
   border: 1px solid #ddd;
-  padding: 50px;
+  padding: 30px;
   margin-left: 10px;
-  flex: 1;
+  flex: 3;
 }
 
-.item-name {
-  margin-left: 10px;
+.order-items-list {
+  border-bottom: 1px solid #ddd;
+  margin-top: 10px;
+  padding-bottom: 20px;
 }
 
-.order-summary-total {
-  border: none;
-  margin-right: 0;
-  text-align: right;
-}
-
-.contact-info label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.contact-info input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-}
-
-.item {
+.order-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
 }
 
-.total-label, .total-price {
+.item-image {
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+}
+
+.item-name {
+  font-size: 16px;
+}
+
+.item-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.item-quantity {
+  margin-top: 10px;
+  display: flex;
+}
+
+.item-price {
+  font-size: 16px;
+  text-align: right;
+}
+
+.order-summary-total {
+  margin-top: 20px;
+}
+
+.cost-info {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+
+.cost-info.total .label, .cost-info.total .value {
   font-weight: bold;
 }
 
@@ -215,8 +220,7 @@ h1 {
   flex: 1;
   display: flex;
   font-weight: bold;
-  margin: 10px;
-  width: 60px;
+  margin: 0;
 }
 
 .value {
@@ -225,5 +229,22 @@ h1 {
   word-wrap: break-word; /* 强制换行 */
   display: flex;
   text-align: left;
+}
+
+h3 {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.tel-num {
+  border: 1px solid;
+  padding-right: 80px;
+  margin-left: 20px;
+}
+
+.contact-info {
+  text-align: center;
+  margin-top: 50px;
 }
 </style>
