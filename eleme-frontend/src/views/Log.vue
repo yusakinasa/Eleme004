@@ -64,7 +64,7 @@ export default {
     },
     updateCode(value) {
       this.generatedCode = value;
-    }
+    },
   }
 }
 </script>
