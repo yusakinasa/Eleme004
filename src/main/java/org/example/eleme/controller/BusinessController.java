@@ -3,9 +3,7 @@ package org.example.eleme.controller;
 import org.example.eleme.model.Business;
 import org.example.eleme.service.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,11 +15,29 @@ public class BusinessController {
     @Autowired
     private BusinessService businessService;
 
-    @GetMapping("/all")
+    @RequestMapping("/all")
     public Map<String, Object> getAll() {
         Map<String, Object> mapjson = new HashMap<>();
         mapjson.put("data", businessService.getAllBusinesses());
         return mapjson;
     }
+
+    @PostMapping
+    public Map<String, Object> addBusiness(@RequestBody Business business) {
+        businessService.save(business);
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("data", business);
+        return response;
+    }
+    @DeleteMapping("/delete/{id}")
+    public Map<String, Object> deleteBusiness(@PathVariable("id") Long businessId) {
+        Map<String, Object> response = new HashMap<>();
+        boolean isDeleted = businessService.deleteBusinessById(businessId);
+        response.put("success", isDeleted);
+        response.put("message", isDeleted ? "Business deleted successfully" : "Business deletion failed");
+        return response;
+    }
 }
+
 
