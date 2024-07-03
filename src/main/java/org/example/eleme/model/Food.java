@@ -14,10 +14,10 @@ import java.math.BigDecimal;
 public class Food {
 
     @TableId(type = IdType.AUTO)
-    private Long food_id;
-    private Long category_id;
+    private Long foodid;
+    private Long categoryid;
     private String name;
-    private String image_url;
+    private String imageurl;
     private BigDecimal price;
 
     private Category category; // 关联的 Category 对象

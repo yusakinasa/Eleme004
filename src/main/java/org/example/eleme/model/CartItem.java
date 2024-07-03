@@ -14,11 +14,11 @@ import java.math.BigDecimal;
 public class CartItem {
 
     @TableId(type = IdType.AUTO)
-    private Long cart_item_id;
-    private Long cart_id;
-    private Long food_id;
+    private Long cartitemid;
+    private Long cartid;
+    private Long foodid;
     private Integer quantity;
-    private BigDecimal total_price;
+    private BigDecimal totalprice;
 
     private Cart cart;   // 关联的 Cart 对象
     private Food food;   // 关联的 Food 对象
