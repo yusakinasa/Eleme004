@@ -18,5 +18,9 @@ public class BusinessServiceImpl extends ServiceImpl<BusinessMapper,Business>  i
     public List<Business> getAllBusinesses() {
         return baseMapper.getAll();
     }
+    @Override
+    public boolean deleteBusinessById(Long id) {
+        return this.removeById(id);
+    }
 
 }

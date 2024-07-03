@@ -38,7 +38,7 @@
             <span class="store-rating">{{ store.rating }}分</span>
             <span class="monthly-sales">月售{{ store.sales }}+</span>
             <span class="distance">{{ store.distance }}km</span>
-            <span class="avg-price">月售{{ store.avgprice }}+</span>
+            <span class="avg-price">均价{{ store.avgprice }}元</span>
           </div>
         </div>
       </div>
