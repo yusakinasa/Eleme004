@@ -1,17 +1,16 @@
 <template>
   <div class="eleme-page">
-    <!-- 顶部用户信息和搜索框 -->
     <header class="header">
       <div class="logo">
         <img src="logo.png" alt="ELEME">
         <span>ELEME</span>
       </div>
       <div class="search-bar">
-        <input type="text" placeholder="搜索">
-        <button>搜索</button>
+        <input type="text" placeholder="搜索" v-model="searchQuery">
+        <button @click="searchStores">搜索</button>
       </div>
       <div class="user-info">
-        <span>{{ userPhone }}</span> <!-- 显示用户手机号 -->
+        <span>{{ userPhone }}</span>
         <button>我的订单</button>
         <button @click="logout">退出</button>
       </div>
@@ -30,7 +29,8 @@
     </nav>
 
     <div class="store-list">
-      <div v-for="(store, index) in stores" :key="index" class="store-item">
+      <div v-if="filteredStores.length === 0">没有找到匹配的商家</div>
+      <div v-for="(store, index) in filteredStores" :key="index" class="store-item" @click="navigateToMenu(store.businessid)">
         <img :src="store.imageurl" alt="店铺图片" class="store-image">
         <div class="store-info">
           <h2 class="store-name">{{ store.name }}</h2>
@@ -57,11 +57,24 @@ export default {
         { label: '距离↓', isActive: false, order: 'desc', field: 'distance' },
         { label: '人均价↑', isActive: false, order: 'asc', field: 'avgprice' }
       ],
-      stores: [],  // 初始化为空，数据将从服务器获取
-      userPhone: '' // 添加用户手机号
+      stores: [],
+      userPhone: '',
+      searchQuery: '',
+      filteredStores: []
     };
   },
   methods: {
+    navigateToMenu(businessid) {
+      console.log('Navigating to MenuSelection with businessid:', businessid);
+      // 添加条件以确保 businessid 是有效的
+      if (businessid) {
+        this.$router.push({ name: 'MenuSelection', query: { businessid } });
+      } else {
+        console.error('Invalid businessid:', businessid);
+      }
+    },
+
+
     handleClick(index) {
       this.buttons.forEach((button, i) => {
         if (i === index) {
@@ -78,21 +91,32 @@ export default {
       fetch(`http://localhost:8081/business/all?sortField=${sortField}&sortOrder=${sortOrder}`)
           .then(response => response.json())
           .then(data => {
-            console.log(data); // 打印数据
+            console.log(data);
             this.stores = data.data;
+            this.filteredStores = this.stores;
           })
           .catch(error => {
             console.error('Error fetching stores:', error);
           });
     },
+    searchStores() {
+      if (this.searchQuery.trim() === '') {
+        this.filteredStores = this.stores;
+      } else {
+        const query = this.searchQuery.toLowerCase();
+        this.filteredStores = this.stores.filter(store =>
+            store.name.toLowerCase().includes(query)
+        );
+      }
+    },
     logout() {
-      localStorage.removeItem('userPhone'); // 清除本地存储
-      this.$router.push({ name: 'LogIn' }); // 跳转到登录页面
+      localStorage.removeItem('userPhone');
+      this.$router.push({ name: 'LogIn' });
     }
   },
   created() {
     this.fetchStores();
-    this.userPhone = localStorage.getItem('userPhone'); // 获取用户手机号
+    this.userPhone = localStorage.getItem('userPhone');
   }
 };
 </script>
@@ -154,26 +178,6 @@ export default {
   cursor: pointer;
 }
 
-.username {
-  margin-right: 8px;
-}
-
-.user-tag {
-  background-color: yellow;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-.order-history-button {
-  margin-left: 16px;
-  padding: 8px 16px;
-  background-color: #ff9800;
-  border: none;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
 .navigation {
   display: flex;
   justify-content: center;
@@ -188,17 +192,15 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  transition: background-color 0.3s ease; /* 添加平滑的背景颜色过渡效果 */
+  transition: background-color 0.3s ease;
 }
 
-/* 鼠标悬停时的颜色渐变效果 */
 .nav-button:hover {
-  background-color: #007bff; /* 设置悬停时的背景颜色，可以根据需要修改 */
+  background-color: #007bff;
 }
 
-/* 激活状态下的样式 */
 .nav-button.active {
-  background-color: #007bff; /* 保持蓝色 */
+  background-color: #007bff;
 }
 
 .store-list {
@@ -247,3 +249,4 @@ export default {
   font-size: 14px;
 }
 </style>
+

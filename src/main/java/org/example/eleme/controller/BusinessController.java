@@ -3,6 +3,7 @@ package org.example.eleme.controller;
 import org.example.eleme.model.Business;
 import org.example.eleme.service.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -40,6 +41,16 @@ public class BusinessController {
         response.put("message", isDeleted ? "Business deleted successfully" : "Business deletion failed");
         return response;
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<Business> getBusinessById(@PathVariable("id") Long id) {
+        Business business = businessService.findById(id);
+        if (business != null) {
+            return ResponseEntity.ok(business);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
 
 

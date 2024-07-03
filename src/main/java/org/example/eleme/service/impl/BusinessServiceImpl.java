@@ -48,4 +48,10 @@ public class BusinessServiceImpl extends ServiceImpl<BusinessMapper, Business> i
     public boolean deleteBusinessById(Long id) {
         return this.removeById(id);
     }
+    @Autowired
+    private BusinessMapper businessMapper;
+    @Override
+    public Business findById(Long businessid) {
+        return businessMapper.findById(businessid);
+    }
 }
