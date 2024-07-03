@@ -31,13 +31,14 @@
 
     <div class="store-list">
       <div v-for="(store, index) in stores" :key="index" class="store-item">
-        <img :src="store.image" alt="店铺图片" class="store-image">
+        <img :src="store.imageurl" alt="店铺图片" class="store-image">
         <div class="store-info">
           <h2 class="store-name">{{ store.name }}</h2>
           <div class="store-details">
             <span class="store-rating">{{ store.rating }}分</span>
             <span class="monthly-sales">月售{{ store.sales }}+</span>
             <span class="distance">{{ store.distance }}km</span>
+            <span class="avg-price">月售{{ store.avgprice }}+</span>
           </div>
         </div>
       </div>
@@ -54,48 +55,37 @@ export default {
         { label: '评分↓', isActive: false, order: 'desc' },
         { label: '人气↓', isActive: false, order: 'desc' },
         { label: '距离↓', isActive: false, order: 'desc' },
-        { label: '人均价↑', isActive: false, order: 'asc' } // 假设初始为升序
+        { label: '人均价↑', isActive: false, order: 'asc' }
       ],
-      stores: [
-        {
-          name: '安格斯牛肉拌饭（华科东校区店）',
-          rating: 4.7,
-          sales: 2000,
-          distance: 1.5,
-          image: '//path-to-store-image.png'
-        },
-        {
-          name: '安格斯牛肉拌饭（华科东校区店）',
-          rating: 4.7,
-          sales: 2000,
-          distance: 1.5,
-          image: '//path-to-store-image.png'
-        },
-        {
-          name: '安格斯牛肉拌饭（华科东校区店）',
-          rating: 4.7,
-          sales: 2000,
-          distance: 1.5,
-          image: '//path-to-store-image.png'
-        },
-        // 可以继续添加更多商店
-      ]
+      stores: []  // 初始化为空，数据将从服务器获取
     };
   },
   methods: {
     handleClick(index) {
-      // 在点击一个按钮时，改变其他按钮的状态
       this.buttons.forEach((button, i) => {
         if (i === index) {
-          // 切换当前按钮的激活状态和排序顺序
           button.isActive = true;
-          button.order = button.order === 'asc' ? 'desc' : 'asc'; // 切换升降序
-          button.label = `${button.label.slice(0, -1)}${button.order === 'asc' ? '↑' : '↓'}`; // 更新标签
+          button.order = button.order === 'asc' ? 'desc' : 'asc';
+          button.label = `${button.label.slice(0, -1)}${button.order === 'asc' ? '↑' : '↓'}`;
         } else {
-          button.isActive = false; // 其他按钮变为非激活状态
+          button.isActive = false;
         }
       });
+    },
+    fetchStores() {
+      fetch('http://localhost:8081/business/all')
+          .then(response => response.json())
+          .then(data => {
+            console.log(data); // 打印数据
+            this.stores = data.data;
+          })
+          .catch(error => {
+            console.error('Error fetching stores:', error);
+          });
     }
+  },
+  created() {
+    this.fetchStores();
   }
 };
 </script>
@@ -245,7 +235,8 @@ export default {
 
 .store-rating,
 .monthly-sales,
-.distance {
+.distance,
+.avg-price{
   font-size: 14px;
 }
 </style>

@@ -13,8 +13,8 @@ import lombok.Data;
 public class Category {
 
     @TableId(type = IdType.AUTO)
-    private Long category_id;
-    private Long business_id;
+    private Long categoryid;
+    private Long businessid;
     private String name;
 
     private Business business; // 关联的 Business 对象
