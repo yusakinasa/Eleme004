@@ -12,7 +12,6 @@
           </div>
           <div class="user-info">
             <span>user256</span>
-            <button>我的订单</button>
             <button>退出</button>
           </div>
         </header>
@@ -67,6 +66,7 @@ export default {
   methods: {
     viewOrder(id) {
       // 实现订单详情查看功能
+      this.$router.push(`/order-detail`);
       console.log(`查看订单 ${id}`);
     },
     deleteOrder(id) {
@@ -78,23 +78,6 @@ export default {
 </script>
 
 <style>
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-}
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-}
-.logout {
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-}
 .order-list {
   margin-top: 20px;
 }
@@ -109,9 +92,11 @@ export default {
 .order-info, .order-details, .order-actions {
   margin: 0 10px;
 }
+
 .order-actions button {
   margin-left: 10px;
 }
+
 .header {
   display: flex;
   align-items: center;

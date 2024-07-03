@@ -29,8 +29,17 @@ export default {
 
 <style>
 .pay-complete {
-  text-align: center;
-  margin-top: 50px;
+    border: 1px solid #007bff;
+    width: 300px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    margin-top: 100px;
+    padding: 20px;
+    border-radius: 10px;
 }
 .icon {
   font-size: 50px;
