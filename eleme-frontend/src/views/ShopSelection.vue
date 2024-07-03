@@ -11,9 +11,9 @@
         <button>搜索</button>
       </div>
       <div class="user-info">
-        <span>user256</span>
+        <span>{{ userPhone }}</span> <!-- 显示用户手机号 -->
         <button>我的订单</button>
-        <button>退出</button>
+        <button @click="logout">退出</button>
       </div>
     </header>
 
@@ -57,7 +57,8 @@ export default {
         { label: '距离↓', isActive: false, order: 'desc', field: 'distance' },
         { label: '人均价↑', isActive: false, order: 'asc', field: 'avgprice' }
       ],
-      stores: []  // 初始化为空，数据将从服务器获取
+      stores: [],  // 初始化为空，数据将从服务器获取
+      userPhone: '' // 添加用户手机号
     };
   },
   methods: {
@@ -83,10 +84,15 @@ export default {
           .catch(error => {
             console.error('Error fetching stores:', error);
           });
+    },
+    logout() {
+      localStorage.removeItem('userPhone'); // 清除本地存储
+      this.$router.push({ name: 'LogIn' }); // 跳转到登录页面
     }
   },
   created() {
     this.fetchStores();
+    this.userPhone = localStorage.getItem('userPhone'); // 获取用户手机号
   }
 };
 </script>
