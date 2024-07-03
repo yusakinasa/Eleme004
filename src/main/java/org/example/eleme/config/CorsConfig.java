@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:8082")  // Vue项目运行的端口
+                        .allowedOrigins("http://localhost:8080")  // Vue项目运行的端口
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowCredentials(true)
                         .maxAge(3600);  // 预检请求的有效期，单位秒

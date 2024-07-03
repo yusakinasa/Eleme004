@@ -5,16 +5,9 @@ import org.example.eleme.model.Business;
 import java.util.List;
 
 
-public interface  BusinessService extends IService<Business> {
+public interface BusinessService extends IService<Business> {
 
-
-    public List<Business> getAllBusinesses() ;
+    List<Business> getAllBusinesses(String sortField, String sortOrder);
     boolean deleteBusinessById(Long id);
-//    public Business getBusinessById(Long id);
-//
-//    public Business createBusiness(Business business);
-//
-//    public void deleteBusiness(Long id);
-//
-//    public Business getBusinessByBusinessname(String businessname);
+    Business findById(Long businessid);
 }

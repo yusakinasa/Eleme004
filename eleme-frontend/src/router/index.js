@@ -4,8 +4,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import OrderConfirm from '../views/OrderConfirm.vue'
 import LogIn from '../views/LogIn.vue'
 import ShopSelection from '../views/ShopSelection.vue'
+
 import MenuSelection from '../views/MenuSelection.vue'
 import OrderDetails from '../views/OrderDetail.vue';
+
+import MyOrder from "../views/MyOrder.vue";
+import PayComplete from "../views/PayComplete.vue";
 
 
 const routes = [
@@ -30,9 +34,20 @@ const routes = [
         component: MenuSelection
     },
     {
+
         path: '/order-details',
         name: 'OrderDetails',
         component: OrderDetails
+    },
+  {
+        path: '/my-order',
+        name: 'MyOrder',
+        component: MyOrder
+    },
+    {
+        path: '/pay-complete',
+        name: 'PayComplete',
+        component: PayComplete
     }
 ]
 

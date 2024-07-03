@@ -59,6 +59,7 @@ export default {
         });
         if (response.data.status === "success") {
           alert('登录成功');
+          localStorage.setItem('userPhone', this.loginPhone); // 存储用户手机号
           this.$router.push({ name: 'ShopSelection' }); // 跳转到ShopSelection页面
         } else {
           alert('登录失败: ' + response.data.message);
@@ -90,6 +91,7 @@ export default {
       this.generatedCode = value;
     }
   }
+
 };
 </script>
 
