@@ -16,9 +16,10 @@ public class BusinessController {
     private BusinessService businessService;
 
     @RequestMapping("/all")
-    public Map<String, Object> getAll() {
+    public Map<String, Object> getAll(@RequestParam(defaultValue = "rating") String sortField,
+                                      @RequestParam(defaultValue = "desc") String sortOrder) {
         Map<String, Object> mapjson = new HashMap<>();
-        mapjson.put("data", businessService.getAllBusinesses());
+        mapjson.put("data", businessService.getAllBusinesses(sortField, sortOrder));
         return mapjson;
     }
 
@@ -30,6 +31,7 @@ public class BusinessController {
         response.put("data", business);
         return response;
     }
+
     @DeleteMapping("/delete/{id}")
     public Map<String, Object> deleteBusiness(@PathVariable("id") Long businessId) {
         Map<String, Object> response = new HashMap<>();
@@ -39,5 +41,6 @@ public class BusinessController {
         return response;
     }
 }
+
 
 
