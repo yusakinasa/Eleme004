@@ -4,7 +4,8 @@
     <HeaderBar :username="username" />
     <div class="menu-selection">
       <!-- 主内容区域 -->
-      <div class="content" v-if="currentStore && Object.keys(currentStore).length > 0">
+<!--      <div class="content" v-if="currentStore && Object.keys(currentStore).length > 0">-->
+      <div class="content">
         <!-- 左边展示区域 -->
         <div class="left-view">
           <div class="shop-info-container">
@@ -99,7 +100,7 @@
 
 import HeaderBar from '@/components/HeaderBar.vue';
 
-import axios from 'axios';
+// import axios from 'axios';
 
 
 export default {
@@ -158,17 +159,17 @@ export default {
     }
   },
   methods: {
-    fetchStoreDetails(businessid) {
-      axios.get(`http://localhost:8081/business/${businessid}`)
-          .then(response => {
-            this.currentStore = response.data;
-            this.loading = false;
-          })
-          .catch(error => {
-            console.error('获取店铺详情失败:', error);
-            this.loading = false;
-          });
-    },
+    // fetchStoreDetails(businessid) {
+    //   axios.get(`http://localhost:8081/business/${businessid}`)
+    //       .then(response => {
+    //         this.currentStore = response.data;
+    //         this.loading = false;
+    //       })
+    //       .catch(error => {
+    //         console.error('获取店铺详情失败:', error);
+    //         this.loading = false;
+    //       });
+    // },
     increaseQuantity(item) {
       item.quantity++;
       if (!this.cartItems.includes(item)) {
@@ -187,19 +188,19 @@ export default {
       }
     },
 
-    RedirectToOrder() {
-      this.$router.push({ name: 'OrderDetails' });
-
-    // logout() {
-    //   localStorage.removeItem('userPhone');
-    //   this.$router.push({ name: 'LogIn' });
-    // }
-  },
-    created() {
-      const businessid = this.$route.query.businessid;
-      this.fetchStoreDetails(businessid);
-      this.userPhone = localStorage.getItem('userPhone');
-    }
+  //   RedirectToOrder() {
+  //     this.$router.push({ name: 'OrderDetails' });
+  //
+  //   // logout() {
+  //   //   localStorage.removeItem('userPhone');
+  //   //   this.$router.push({ name: 'LogIn' });
+  //   // }
+  // },
+  //   created() {
+  //     const businessid = this.$route.query.businessid;
+  //     this.fetchStoreDetails(businessid);
+  //     this.userPhone = localStorage.getItem('userPhone');
+  //   }
   },
 }
 </script>
