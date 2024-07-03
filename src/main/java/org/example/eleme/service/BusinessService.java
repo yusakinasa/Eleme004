@@ -9,7 +9,7 @@ public interface  BusinessService extends IService<Business> {
 
 
     public List<Business> getAllBusinesses() ;
-
+    boolean deleteBusinessById(Long id);
 //    public Business getBusinessById(Long id);
 //
 //    public Business createBusiness(Business business);
