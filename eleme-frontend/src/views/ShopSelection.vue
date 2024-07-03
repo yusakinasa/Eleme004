@@ -78,11 +78,10 @@ export default {
     handleClick(index) {
       this.buttons.forEach((button, i) => {
         if (i === index) {
-          if (button.isActive===true){
+          button.isActive = true;
           button.order = button.order === 'asc' ? 'desc' : 'asc';
           button.label = `${button.label.slice(0, -1)}${button.order === 'asc' ? '↑' : '↓'}`;
           this.fetchStores(button.field, button.order);
-
         } else {
           button.isActive = false;
         }

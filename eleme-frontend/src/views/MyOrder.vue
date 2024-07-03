@@ -18,15 +18,15 @@
     <h2>我的订单</h2>
     <div class="order-list">
       <div class="order" v-for="order in orders" :key="order.id">
-        <img :src="order.image" alt="order image" />
+        <img :src="order.imageurl" alt="order image" />
         <div class="order-info">
           <p>{{ order.name }}</p>
-          <p>{{ order.date }}</p>
+          <p>{{ order.deliverytime }}</p>
         </div>
         <div class="order-details">
-          <p>收货人: {{ order.recipient }}</p>
-          <p>金额: {{ order.amount }}</p>
-          <p>支付方式: {{ order.payment }}</p>
+          <p>收货人: {{ order.contactname }}</p>
+          <p>金额: {{ order.totalprice }}</p>
+          <p>支付方式: {{ order.paymentmethod }}</p>
         </div>
         <div class="order-actions">
           <button @click="viewOrder(order.id)">订单详情</button>
@@ -38,28 +38,29 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data() {
     return {
       orders: [
-        {
-          id: 1,
-          image: 'image_url',
-          name: '炸鸡（华科店）',
-          date: '2024-06-30 17:30',
-          recipient: '屈唯一',
-          amount: '¥50.0',
-          payment: '微信支付',
-        },
-        {
-          id: 2,
-          image: 'image_url',
-          name: '炸鸡（华科店）',
-          date: '2024-06-30 17:30',
-          recipient: '屈唯一',
-          amount: '¥20.0',
-          payment: '微信支付',
-        },
+        // {
+        //   id: 1,
+        //   image: 'image_url',
+        //   name: '炸鸡（华科店）',
+        //   date: '2024-06-30 17:30',
+        //   recipient: '屈唯一',
+        //   amount: '¥50.0',
+        //   payment: '微信支付',
+        // },
+        // {
+        //   id: 2,
+        //   image: 'image_url',
+        //   name: '炸鸡（华科店）',
+        //   date: '2024-06-30 17:30',
+        //   recipient: '屈唯一',
+        //   amount: '¥20.0',
+        //   payment: '微信支付',
+        // },
       ],
     };
   },
@@ -73,6 +74,18 @@ export default {
       // 实现订单删除功能
       this.orders = this.orders.filter(order => order.id !== id);
     },
+    fetchOrders() {
+      axios.get('/order')
+          .then(response => {
+            this.orders = response.data;
+          })
+          .catch(error => {
+            console.error("There was an error fetching the orders!", error);
+          });
+    },
+  },
+  created() {
+    this.fetchOrders();
   },
 };
 </script>

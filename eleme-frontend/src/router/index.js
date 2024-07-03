@@ -6,7 +6,7 @@ import LogIn from '../views/LogIn.vue'
 import ShopSelection from '../views/ShopSelection.vue'
 
 import MenuSelection from '../views/MenuSelection.vue'
-import OrderDetails from '../views/OrderDetails.vue';
+import OrderDetails from '../views/OrderDetail.vue';
 
 import MyOrder from "../views/MyOrder.vue";
 import PayComplete from "../views/PayComplete.vue";
