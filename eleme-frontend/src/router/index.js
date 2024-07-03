@@ -9,12 +9,12 @@ import MenuSelection from "../views/MenuSelection.vue";
 
 const routes = [
     {
-        path: '/order-confirm',
+        path: '/',
         name: 'OrderConfirm',
         component: OrderConfirm
     },
     {
-        path: '/',
+        path: '/login',
         name: 'LogIn',
         component: LogIn
     },

@@ -11,4 +11,6 @@ import java.util.List;
 public interface DeliveryAddressMapper extends BaseMapper<DeliveryAddress> {
     @Select("select * from delivery_address")
     List<DeliveryAddress> getAll();
+    void insertDeliveryAddress(DeliveryAddress deliveryAddress);
+    void deleteDeliveryAddress(Long id);
 }

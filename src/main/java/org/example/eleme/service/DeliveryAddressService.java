@@ -10,6 +10,9 @@ public interface DeliveryAddressService extends IService<DeliveryAddress> {
 
 
     public List<DeliveryAddress> getAllDeliveryAddresses() ;
+    void saveDeliveryAddress(DeliveryAddress deliveryAddress);
+
+    void deleteDeliveryAddress(Long id);
 
 //    public DeliveryAddress getDeliveryAddressById(Long id);
 //

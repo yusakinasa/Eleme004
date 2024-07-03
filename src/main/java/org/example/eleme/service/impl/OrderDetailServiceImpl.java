@@ -13,9 +13,12 @@ import java.util.List;
 public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper,OrderDetail>  implements OrderDetailService {
 
 
-
+    private OrderDetailMapper orderDetailMapper;
     public List<OrderDetail> getAllOrderDetails() {
         return baseMapper.getAll();
+    }
+    public void addOrderDetail(OrderDetail orderDetail) {
+        orderDetailMapper.insertOrderDetail(orderDetail);
     }
 
 //    public OrderDetail getOrderDetailById(Long id) {

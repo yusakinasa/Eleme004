@@ -113,12 +113,8 @@ export default {
       deliveryOptions: [], // 存储配送时间选项的数组
       moreAddressesVisible: false, // 控制更多地址列表的显示状态
       addingNewAddress: false, // 控制添加新地址表单的显示状态
-      addresses: [
-        { contactName: '张三', phoneNumber: '123456789', address: '地址1' },
-        { contactName: '李四', phoneNumber: '987654321', address: '地址2' },
-        { contactName: '王五', phoneNumber: '135792468', address: '地址3' }
-      ], // 示例地址列表
-      selectedAddressIndex: 0, // 选中的地址索引
+      addresses: [], // 示例地址列表
+      selectedAddressIndex: -1, // 选中的地址索引
       selectedShippingInfo: {
         contactName: '张三',
         phoneNumber: '123456789',
@@ -143,6 +139,7 @@ export default {
     };
   },
   created() {
+    this.fetchAddresses();
     this.generateDeliveryOptions();
   },
   methods: {
@@ -171,6 +168,24 @@ export default {
 
       this.selectedDeliveryTime = this.deliveryOptions[0].value; // 默认选择第一个选项
     },
+    fetchAddresses() {
+      // 实际的后端API端点URL；替换为您的后端API端点
+      const apiUrl = 'http://localhost:8081/deliveryaddress/address';
+
+      axios.get(apiUrl)
+          .then(response => {
+            // 成功获取到地址列表数据
+            this.addresses = response.data.data;
+            if (this.addresses.length > 0) {
+              // 默认选中第一个地址
+              this.selectDefaultAddress(0);
+            }
+          })
+          .catch(error => {
+            console.error('获取地址列表时出错:', error);
+            alert('获取地址列表时出错，请重试。');
+          });
+    },
     submitOrder() {
       // 准备发送到后端的数据
       const orderData = {
@@ -181,7 +196,7 @@ export default {
       };
 
       // 实际的后端API端点URL；替换为您的后端API端点
-      const apiUrl = 'http://localhost:8080/';
+      const apiUrl = 'http://localhost:8081/order';
 
       // 使用Axios发送POST请求到后端
       axios.post(apiUrl, orderData)

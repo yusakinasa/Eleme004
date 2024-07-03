@@ -10,6 +10,11 @@ public interface FoodService extends IService<Food> {
 
 
     public List<Food> getAllFoods() ;
+    Food findById(Long foodId);
+    List<Food> findByCategoryId(Long categoryId);
+    void saveFood(Food food);
+    void updateFood(Food food);
+    void deleteFood(Long foodId);
 
 //    public Food getFoodById(Long id);
 //

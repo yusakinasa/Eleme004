@@ -10,6 +10,13 @@ public interface OrderService extends IService<Order> {
 
 
     public List<Order> getAllOrders() ;
+    Order getOrderById(Long orderId);
+
+    void createOrder(Order order);
+
+    void updateOrder(Order order);
+
+    void deleteOrder(Long orderId);
 
 //    public Order getOrderById(Long id);
 //

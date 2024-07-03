@@ -11,4 +11,6 @@ import java.util.List;
 public interface OrderDetailMapper extends BaseMapper<OrderDetail> {
     @Select("select * from order_detail")
     List<OrderDetail> getAll();
+    void insertOrderDetail(OrderDetail orderDetail);
+
 }

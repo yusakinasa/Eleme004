@@ -18,6 +18,15 @@ public class DeliveryAddressServiceImpl extends ServiceImpl<DeliveryAddressMappe
         return baseMapper.getAll();
     }
 
+    public void saveDeliveryAddress(DeliveryAddress deliveryAddress) {
+        baseMapper.insertDeliveryAddress(deliveryAddress);
+    }
+
+
+    public void deleteDeliveryAddress(Long id) {
+        baseMapper.deleteDeliveryAddress(id);
+    }
+
 //    public DeliveryAddress getDeliveryAddressById(Long id) {
 //        return userRepository.findById(id).orElse(null);
 //    }

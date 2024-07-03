@@ -10,6 +10,7 @@ public interface OrderDetailService extends IService<OrderDetail> {
 
 
     public List<OrderDetail> getAllOrderDetails() ;
+    void addOrderDetail(OrderDetail orderDetail);
 
 //    public OrderDetail getOrderDetailById(Long id);
 //
