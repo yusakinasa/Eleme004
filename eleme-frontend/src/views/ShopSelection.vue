@@ -20,24 +20,22 @@
       </button>
     </nav>
 
-    <div class="store-list">
-
-      <div v-if="filteredStores.length === 0">没有找到匹配的商家</div>
-      <div v-for="(store, index) in filteredStores" :key="index" class="store-item" @click="navigateToMenu(store.businessid)">
-        <img :src="store.imageurl" alt="店铺图片" class="store-image">
-
-        <div class="store-info">
-          <h2 class="store-name">{{ store.name }}</h2>
-          <div class="store-details">
-            <span class="store-rating">{{ store.rating }}分</span>
-            <span class="monthly-sales">月售{{ store.sales }}+</span>
-            <span class="distance">{{ store.distance }}km</span>
-            <span class="avg-price">¥{{ store.avg_price }}</span>
+      <div class="store-list">
+        <!--      <div v-if="filteredStores.length === 0">没有找到匹配的商家</div>-->
+        <div v-for="(store, index) in stores" :key="index" class="store-item">
+          <img :src="store.image" alt="店铺图片" class="store-image">
+          <div class="store-info">
+            <h2 class="store-name">{{ store.name }}</h2>
+            <div class="store-details">
+              <span class="store-rating">{{ store.rating }}分</span>
+              <span class="monthly-sales">月售{{ store.sales }}+</span>
+              <span class="distance">{{ store.distance }}km</span>
+              <span class="avgprice">{¥{ store.avg_price }}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -52,10 +50,10 @@ export default {
     return {
       username: 'user256',
       buttons: [
-        { label: '评分↓', isActive: false, order: 'desc', field: 'rating' },
-        { label: '人气↓', isActive: false, order: 'desc', field: 'sales' },
-        { label: '距离↓', isActive: false, order: 'desc', field: 'distance' },
-        { label: '人均价↑', isActive: false, order: 'asc', field: 'avgprice' }
+        {label: '评分↓', isActive: false, order: 'desc', field: 'rating'},
+        {label: '人气↓', isActive: false, order: 'desc', field: 'sales'},
+        {label: '距离↓', isActive: false, order: 'desc', field: 'distance'},
+        {label: '人均价↑', isActive: false, order: 'asc', field: 'avgprice'}
       ],
 
       stores: [
@@ -93,15 +91,15 @@ export default {
     };
   },
   methods: {
-    navigateToMenu(businessid) {
-      console.log('Navigating to MenuSelection with businessid:', businessid);
-      // 添加条件以确保 businessid 是有效的
-      if (businessid) {
-        this.$router.push({ name: 'MenuSelection', query: { businessid } });
-      } else {
-        console.error('Invalid businessid:', businessid);
-      }
-    },
+    // navigateToMenu(businessid) {
+    //   console.log('Navigating to MenuSelection with businessid:', businessid);
+    //   // 添加条件以确保 businessid 是有效的
+    //   if (businessid) {
+    //     this.$router.push({ name: 'MenuSelection', query: { businessid } });
+    //   } else {
+    //     console.error('Invalid businessid:', businessid);
+    //   }
+    // },
 
 
     handleClick(index) {
@@ -113,25 +111,25 @@ export default {
             button.label = `${button.label.slice(0, -1)}${button.order === 'asc' ? '↑' : '↓'}`;
           }
           button.isActive = true;
-          this.fetchStores(button.field, button.order);
+          // this.fetchStores(button.field, button.order);
 
         } else {
           button.isActive = false;
         }
       });
     },
-    fetchStores(sortField = 'rating', sortOrder = 'desc') {
-      fetch(`http://localhost:8081/business/all?sortField=${sortField}&sortOrder=${sortOrder}`)
-          .then(response => response.json())
-          .then(data => {
-            console.log(data);
-            this.stores = data.data;
-            this.filteredStores = this.stores;
-          })
-          .catch(error => {
-            console.error('Error fetching stores:', error);
-          });
-    },
+    // fetchStores(sortField = 'rating', sortOrder = 'desc') {
+    //   fetch(`http://localhost:8081/business/all?sortField=${sortField}&sortOrder=${sortOrder}`)
+    //       .then(response => response.json())
+    //       .then(data => {
+    //         console.log(data);
+    //         this.stores = data.data;
+    //         this.filteredStores = this.stores;
+    //       })
+    //       .catch(error => {
+    //         console.error('Error fetching stores:', error);
+    //       });
+    // },
 
     onLogoClick() {
       console.log('Logo clicked!');
@@ -144,6 +142,7 @@ export default {
     },
     onLogout() {
       console.log('Logout clicked!');
+    },
 
     // searchStores() {
     //   if (this.searchQuery.trim() === '') {
@@ -154,18 +153,18 @@ export default {
     //         store.name.toLowerCase().includes(query)
     //     );
     //   }
-    // },
+    // }
+  },
+}
     // logout() {
     //   localStorage.removeItem('userPhone');
-    //   this.$router.push({ name: 'LogIn' });
+    //   this.$router.push({name: 'LogIn'});
+    // }
+  // created() {
+  //   this.fetchStores();
+  //   this.userPhone = localStorage.getItem('userPhone');
+  // }
 
-    }
-  },
-  created() {
-    this.fetchStores();
-    this.userPhone = localStorage.getItem('userPhone');
-  }
-};
 </script>
 
 <style scoped>
@@ -175,7 +174,6 @@ export default {
 
   text-align: center;
 
-  padding: 16px;
   margin-bottom: 16px;
   border-radius: 8px;
 }
@@ -190,16 +188,17 @@ export default {
 .nav-button {
   margin: 0 8px;
   padding: 8px 16px;
-  background-color: white;
+  background-color: #f0f0f0;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   transition: background-color 0.3s ease;
+  color: black;
 }
 
+/* 鼠标悬停时的颜色渐变效果 */
 .nav-button:hover {
-
   background-color: #007bff; /* 设置悬停时的背景颜色，可以根据需要修改 */
   color: white;
 }
@@ -253,7 +252,7 @@ export default {
 .store-rating,
 .monthly-sales,
 .distance,
-.avg-price{
+.avg_price{
   font-size: 14px;
 }
 

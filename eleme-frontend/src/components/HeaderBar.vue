@@ -65,6 +65,7 @@ export default {
 
 .logo {
   height: 40px;
+  width: 40px;
 }
 
 .search-bar {
@@ -113,5 +114,6 @@ h1 {
   cursor: pointer;
   border: none;
   display: flex;
+  background-color: #f0f0f0;
 }
 </style>
