@@ -5,7 +5,8 @@ import OrderConfirm from '../views/OrderConfirm.vue'
 import LogIn from '../views/LogIn.vue'
 import ShopSelection from '../views/ShopSelection.vue'
 import MenuSelection from "../views/MenuSelection.vue";
-
+import MyOrder from "../views/MyOrder.vue";
+import PayComplete from "../views/PayComplete.vue";
 
 const routes = [
     {
@@ -27,6 +28,16 @@ const routes = [
         path: '/menu-selection',
         name: 'MenuSelection',
         component: MenuSelection
+    },
+    {
+        path: '/my-order',
+        name: 'MyOrder',
+        component: MyOrder
+    },
+    {
+        path: '/pay-complete',
+        name: 'PayComplete',
+        component: PayComplete
     }
 ]
 
