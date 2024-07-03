@@ -88,9 +88,11 @@ export default {
       this.buttons.forEach((button, i) => {
         if (i === index) {
           // 切换当前按钮的激活状态和排序顺序
+          if(button.isActive===true) {
+            button.order = button.order === 'asc' ? 'desc' : 'asc'; // 切换升降序
+            button.label = `${button.label.slice(0, -1)}${button.order === 'asc' ? '↑' : '↓'}`; // 更新标签
+          }
           button.isActive = true;
-          button.order = button.order === 'asc' ? 'desc' : 'asc'; // 切换升降序
-          button.label = `${button.label.slice(0, -1)}${button.order === 'asc' ? '↑' : '↓'}`; // 更新标签
         } else {
           button.isActive = false; // 其他按钮变为非激活状态
         }
