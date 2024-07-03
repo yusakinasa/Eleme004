@@ -9,4 +9,5 @@ public interface BusinessService extends IService<Business> {
 
     List<Business> getAllBusinesses(String sortField, String sortOrder);
     boolean deleteBusinessById(Long id);
+    Business findById(Long businessid);
 }
