@@ -13,9 +13,9 @@ import lombok.Data;
 public class Cart {
 
     @TableId(type = IdType.AUTO)
-    private Long cart_id;
-    private Long user_id;
-    private Long business_id;
+    private Long cartid;
+    private Long userid;
+    private Long businessid;
 
     private User user;         // 关联的 User 对象
     private Business business; // 关联的 Business 对象

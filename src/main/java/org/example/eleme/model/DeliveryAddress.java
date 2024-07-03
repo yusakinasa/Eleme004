@@ -13,10 +13,10 @@ import lombok.Data;
 public class DeliveryAddress {
 
     @TableId(type = IdType.AUTO)
-    private Long address_id;
-    private Long user_id;
-    private String contact_name;
-    private String contact_phone;
+    private Long addressid;
+    private Long userid;
+    private String contactname;
+    private String contactphone;
     private String address;
 
     private User user; // 关联的 User 对象

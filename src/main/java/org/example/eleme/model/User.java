@@ -13,8 +13,8 @@ import lombok.Data;
 public class User {
 
     @TableId(type = IdType.AUTO)
-    private Long user_id;
-    private String username;
+    private Long userid;
+    //private String username;
     private String password;
 
     private String phone;

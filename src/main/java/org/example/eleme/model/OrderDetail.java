@@ -14,11 +14,11 @@ import java.math.BigDecimal;
 public class OrderDetail {
 
     @TableId(type = IdType.AUTO)
-    private Long order_detail_id;
-    private Long order_id;
-    private Long food_id;
+    private Long orderdetailid;
+    private Long orderid;
+    private Long foodid;
     private Integer quantity;
-    private BigDecimal total_price;
+    private BigDecimal totalprice;
 
     private Order order;   // 关联的 Orders 对象
     private Food food;      // 关联的 Food 对象
