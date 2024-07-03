@@ -22,7 +22,6 @@ public class Food {
 
     private Category category; // 关联的 Category 对象
 
-
     @Override
     public String toString() {
         return JSON.toJSONString(this);
