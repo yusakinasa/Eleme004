@@ -52,10 +52,10 @@ export default {
   data() {
     return {
       buttons: [
-        { label: '评分↓', isActive: false, order: 'desc' },
-        { label: '人气↓', isActive: false, order: 'desc' },
-        { label: '距离↓', isActive: false, order: 'desc' },
-        { label: '人均价↑', isActive: false, order: 'asc' }
+        { label: '评分↓', isActive: false, order: 'desc', field: 'rating' },
+        { label: '人气↓', isActive: false, order: 'desc', field: 'sales' },
+        { label: '距离↓', isActive: false, order: 'desc', field: 'distance' },
+        { label: '人均价↑', isActive: false, order: 'asc', field: 'avgprice' }
       ],
       stores: []  // 初始化为空，数据将从服务器获取
     };
@@ -67,13 +67,14 @@ export default {
           button.isActive = true;
           button.order = button.order === 'asc' ? 'desc' : 'asc';
           button.label = `${button.label.slice(0, -1)}${button.order === 'asc' ? '↑' : '↓'}`;
+          this.fetchStores(button.field, button.order);
         } else {
           button.isActive = false;
         }
       });
     },
-    fetchStores() {
-      fetch('http://localhost:8081/business/all')
+    fetchStores(sortField = 'rating', sortOrder = 'desc') {
+      fetch(`http://localhost:8081/business/all?sortField=${sortField}&sortOrder=${sortOrder}`)
           .then(response => response.json())
           .then(data => {
             console.log(data); // 打印数据
