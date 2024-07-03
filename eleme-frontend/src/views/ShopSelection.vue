@@ -11,9 +11,9 @@
         <button>搜索</button>
       </div>
       <div class="user-info">
-        <span>user256</span>
+        <span>{{ userPhone }}</span> <!-- 显示用户手机号 -->
         <button>我的订单</button>
-        <button>退出</button>
+        <button @click="logout">退出</button>
       </div>
     </header>
 
@@ -52,12 +52,13 @@ export default {
   data() {
     return {
       buttons: [
-        { label: '评分↓', isActive: false, order: 'desc' },
-        { label: '人气↓', isActive: false, order: 'desc' },
-        { label: '距离↓', isActive: false, order: 'desc' },
-        { label: '人均价↑', isActive: false, order: 'asc' }
+        { label: '评分↓', isActive: false, order: 'desc', field: 'rating' },
+        { label: '人气↓', isActive: false, order: 'desc', field: 'sales' },
+        { label: '距离↓', isActive: false, order: 'desc', field: 'distance' },
+        { label: '人均价↑', isActive: false, order: 'asc', field: 'avgprice' }
       ],
-      stores: []  // 初始化为空，数据将从服务器获取
+      stores: [],  // 初始化为空，数据将从服务器获取
+      userPhone: '' // 添加用户手机号
     };
   },
   methods: {
@@ -65,17 +66,17 @@ export default {
       this.buttons.forEach((button, i) => {
         if (i === index) {
           if (button.isActive===true){
-            button.order = button.order === 'asc' ? 'desc' : 'asc';
-            button.label = `${button.label.slice(0, -1)}${button.order === 'asc' ? '↑' : '↓'}`;
-          }
-          button.isActive = true;
+          button.order = button.order === 'asc' ? 'desc' : 'asc';
+          button.label = `${button.label.slice(0, -1)}${button.order === 'asc' ? '↑' : '↓'}`;
+          this.fetchStores(button.field, button.order);
+
         } else {
           button.isActive = false;
         }
       });
     },
-    fetchStores() {
-      fetch('http://localhost:8081/business/all')
+    fetchStores(sortField = 'rating', sortOrder = 'desc') {
+      fetch(`http://localhost:8081/business/all?sortField=${sortField}&sortOrder=${sortOrder}`)
           .then(response => response.json())
           .then(data => {
             console.log(data); // 打印数据
@@ -84,10 +85,15 @@ export default {
           .catch(error => {
             console.error('Error fetching stores:', error);
           });
+    },
+    logout() {
+      localStorage.removeItem('userPhone'); // 清除本地存储
+      this.$router.push({ name: 'LogIn' }); // 跳转到登录页面
     }
   },
   created() {
     this.fetchStores();
+    this.userPhone = localStorage.getItem('userPhone'); // 获取用户手机号
   }
 };
 </script>
