@@ -1,14 +1,13 @@
 package org.example.eleme.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 import org.example.eleme.model.Cart;
-
-import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface CartMapper extends BaseMapper<Cart> {
-    @Select("select * from cart")
-    List<Cart> getAll();
+public interface CartMapper {
+    void insertCart(Cart cart);
+    void updateCart(Cart cart);
+    void deleteCartById(Long cartid);
 }
+
+
