@@ -85,7 +85,7 @@
         </div>
         <div class="total">
           <span>共计 {{ totalPrice }} ¥</span>
-          <button>去结算</button>
+          <button @click="checkout">去结算</button>
         </div>
       </div>
     </div>
@@ -121,6 +121,36 @@ export default {
     }
   },
   methods: {
+    checkout() {
+      // Redirect to OrderConfirm component with selected cart items
+      this.$router.push({
+        name: 'OrderConfirm',
+        query: { items: JSON.stringify(this.cartItems) }
+      });
+    },
+    addToCart(item) {
+      axios.post(`http://localhost:8080/api/cart-item/add`, {
+        foodid: item.foodid,
+        quantity: item.quantity
+      })
+          .then(() => {
+            // 添加成功后更新视图或其他逻辑
+            // 例如从数据库获取最新的购物车信息
+          })
+          .catch(error => {
+            console.error('添加商品到购物车失败:', error);
+          });
+    },
+    removeFromCart(cartitemid) {
+      axios.delete(`http://localhost:8080/api/cart-item/remove/${cartitemid}`)
+          .then(() => {
+            // 移除成功后更新视图或其他逻辑
+            // 例如从数据库获取最新的购物车信息
+          })
+          .catch(error => {
+            console.error('从购物车移除商品失败:', error);
+          });
+    },
     fetchStoreDetails(businessid) {
       axios.get(`http://localhost:8081/business/${businessid}`)
           .then(response => {

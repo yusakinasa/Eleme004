@@ -143,7 +143,13 @@ export default {
     };
   },
   created() {
-    this.generateDeliveryOptions();
+    // Parse the items passed from the MenuSelection component
+    const items = JSON.parse(this.$route.query.items);
+    // Now 'items' contains your selected food items
+    this.shoppingCart = items.map(item => ({
+      name: item.name,
+      price: item.price
+    }));
   },
   methods: {
     generateDeliveryOptions() {
