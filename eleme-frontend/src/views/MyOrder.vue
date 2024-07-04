@@ -27,7 +27,8 @@
 </template>
 
 <script>
-import HeaderBar from '@/components/HeaderBar.vue'; // 引入 HeaderBar 组件
+import HeaderBar from '@/components/HeaderBar.vue';
+import axios from "axios"; // 引入 HeaderBar 组件
 
 export default {
   components: {
@@ -35,41 +36,38 @@ export default {
   },
   data() {
     return {
-      username: 'user256',
-      orders: [
-        {
-          id: 1,
-          image: 'image_url',
-          name: '炸鸡（华科店）',
-          date: '2024-06-30 17:30',
-          recipient: '屈唯一',
-          amount: '¥50.0',
-          payment: '微信支付',
-        },
-        {
-          id: 2,
-          image: 'image_url',
-          name: '炸鸡（华科店）',
-          date: '2024-06-30 17:30',
-          recipient: '屈唯一',
-          amount: '¥20.0',
-          payment: '微信支付',
-        },
-      ],
+      username: '',
+      orders: []
     };
   },
   methods: {
     viewOrder(orderid) {
-      // 实现订单详情查看功能
-      this.$router.push({name:'OrderDetails'});
-      console.log(`查看订单 ${id}`);
+      this.$router.push({ name: 'OrderDetails', params: { orderid } });
     },
     deleteOrder(orderid) {
-      // 实现订单删除功能
-      this.orders = this.orders.filter(order => order.orderid !== orderid);
+      axios.delete(`http://localhost:8080/api/order/${orderid}`)
+          .then(() => {
+            this.orders = this.orders.filter(order => order.orderid !== orderid);
+          })
+          .catch(error => {
+            console.error('删除订单失败:', error);
+          });
     },
-
+    fetchOrders() {
+      const userPhone = localStorage.getItem('userPhone');
+      axios.get(`http://localhost:8080/api/orders/${userPhone}`)
+          .then(response => {
+            this.orders = response.data;
+          })
+          .catch(error => {
+            console.error('获取订单失败:', error);
+          });
+    }
   },
+  created() {
+    this.username = localStorage.getItem('userPhone');
+    this.fetchOrders();
+  }
 
 };
 </script>
