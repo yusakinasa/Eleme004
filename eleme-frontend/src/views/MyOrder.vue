@@ -2,7 +2,7 @@
   <div>
     <!-- 使用 HeaderBar 组件 -->
     <HeaderBar :username="username" :showSearch="true" />
-
+  <div class="myorder-page">
     <h2>我的订单</h2>
     <div class="order-list">
       <div class="order" v-for="order in orders" :key="order.id">
@@ -22,6 +22,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -72,6 +73,12 @@ export default {
 </script>
 
 <style>
+.myorder-page {
+  font-family: Arial, sans-serif;
+  margin: 0 10%;
+  padding: 20px;
+}
+
 .order-list {
   margin-top: 20px;
 }

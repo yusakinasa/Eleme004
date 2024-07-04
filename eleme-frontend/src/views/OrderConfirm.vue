@@ -64,11 +64,17 @@
             <div class="store-info">
               氢气层(华科东校区店) - 商家自配送
             </div>
-            <div class="item" v-for="(item, index) in shoppingCart" :key="index">
-              <div class="item-info">
-                {{ item.name }}
+            <div class="order-items-list">
+              <div class="order-item" v-for="(item, index) in shoppingCart" :key="index">
+                <div class="item-info">
+                  <img :src="item.image" alt="商品图片" class="item-image">
+                </div>
+                <div class="item-details">
+                  <span class="item-name">{{ item.name }}</span>
+                  <span class="item-quantity">×{{ item.account }}</span>
+                </div>
+                <span class="item-price">¥{{ item.price }}</span>
               </div>
-              <div class="price">¥{{ item.price }}</div>
             </div>
           </div>
           <div class="subtotal">
@@ -143,10 +149,18 @@ export default {
         address: '地址1'
       }, // 默认收货信息对象
       shoppingCart: [
-        { name: '葡国奶油焗饭+原味鸡块+雪碧', price: '29.9' },
-        { name: '某某商品', price: '20' },
-        { name: '新商品1', price: '15.5' },
-        { name: '新商品2', price: '12.3' }
+        {
+          name: '招牌咖喱鸡饭',
+          price: 19.9,
+          image: 'path/to/image1.jpg',
+          account: 1
+        },
+        {
+          name: '雪碧',
+          price: 5,
+          image: 'path/to/image2.jpg',
+          account: 1
+        },
       ] // 购物车中的商品列表
     };
   },
@@ -388,10 +402,6 @@ export default {
   margin-bottom: 10px;
 }
 
-.item-info {
-  flex-grow: 1;
-}
-
 .price {
   font-weight: bold;
 }
@@ -408,6 +418,8 @@ export default {
 .total {
   font-weight: bold;
   margin-top: 10px;
+  text-align: right;
+  padding-right: 20px;
 }
 
 
@@ -452,4 +464,57 @@ button {
 button:hover {
   background-color: #0056b3;
 }
+
+.order-items {
+  border: 1px solid #ddd;
+  padding: 30px;
+  margin-left: 10px;
+  flex: 3;
+}
+
+.order-items-list {
+  border-bottom: 1px solid #ddd;
+  margin-top: 10px;
+  padding-bottom: 20px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.item-info {
+  width: 70px;
+}
+
+.item-image {
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+}
+
+.item-name {
+  font-size: 16px;
+}
+
+.item-details {
+  display: flex;
+  flex-direction: column;
+  flex: 8;
+}
+
+.item-quantity {
+  margin-top: 10px;
+  display: flex;
+}
+
+.item-price {
+  flex: 1;
+  padding-right: 20px;
+  font-size: 16px;
+  text-align: right;
+}
+
 </style>

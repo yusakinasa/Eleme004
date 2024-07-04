@@ -2,7 +2,7 @@
   <div class="eleme-page">
     <!-- 使用 HeaderBar 组件 -->
     <HeaderBar :username="username" />
-    <div class="menu-selection">
+    <div class="menu-page">
       <!-- 主内容区域 -->
 <!--      <div class="content" v-if="currentStore && Object.keys(currentStore).length > 0">-->
       <div class="content">
@@ -82,7 +82,7 @@
           </div>
           <div class="total">
             <span>共计 {{ totalPrice }} ¥</span>
-            <button>去结算</button>
+            <button @click="redirectToOrderConfirm">去结算</button>
           </div>
         </div>
       </div>
@@ -170,6 +170,10 @@ export default {
     //         this.loading = false;
     //       });
     // },
+    redirectToOrderConfirm() {
+      this.$router.push({name:'OrderConfirm'});
+    },
+
     increaseQuantity(item) {
       item.quantity++;
       if (!this.cartItems.includes(item)) {
@@ -206,6 +210,11 @@ export default {
 </script>
 
 <style scoped>
+.menu-page {
+  font-family: Arial, sans-serif;
+  margin: 0 10%;
+  padding: 20px;
+}
 .menu-selection {
   display: flex;
   flex-direction: column;

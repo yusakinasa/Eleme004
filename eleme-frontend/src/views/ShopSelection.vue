@@ -1,11 +1,11 @@
 <template>
-    <!-- 使用 HeaderBar 组件 -->
+  <!-- 使用 HeaderBar 组件 -->
   <HeaderBar
-        :username="username"
-        @logo-click="onLogoClick"
-        @search="onSearch"
-        @view-orders="onViewOrders"
-        @logout="onLogout"
+      :username="username"
+      @logo-click="onLogoClick"
+      @search="onSearch"
+      @view-orders="onViewOrders"
+      @logout="onLogout"
   />
   <div class="eleme-page">
     <nav class="navigation">
@@ -20,23 +20,24 @@
       </button>
     </nav>
 
-      <div class="store-list">
+    <div class="store-list">
         <!--      <div v-if="filteredStores.length === 0">没有找到匹配的商家</div>-->
-        <div v-for="(store, index) in stores" :key="index" class="store-item">
-          <img :src="store.image" alt="店铺图片" class="store-image">
-          <div class="store-info">
-            <h2 class="store-name">{{ store.name }}</h2>
-            <div class="store-details">
-              <span class="store-rating">{{ store.rating }}分</span>
-              <span class="monthly-sales">月售{{ store.sales }}+</span>
-              <span class="distance">{{ store.distance }}km</span>
-              <span class="avgprice">¥{{ store.avg_price }}</span>
-            </div>
+      <div v-for="(store, index) in stores" :key="index" class="store-item">
+        <img :src="store.image" alt="店铺图片" class="store-image">
+        <div class="store-info">
+          <h2 class="store-name">{{ store.name }}</h2>
+          <div class="store-details">
+            <span class="store-rating">{{ store.rating }}分</span>
+            <span class="monthly-sales">月售{{ store.sales }}+</span>
+            <span class="distance">{{ store.distance }}km</span>
+            <span class="avgprice">¥{{ store.avg_price }}</span>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
+
 
 <script>
 import HeaderBar from '@/components/HeaderBar.vue';
@@ -67,7 +68,7 @@ export default {
         },
         {
           name: '安格斯牛肉拌饭（华科东校区店）',
-          rating: 4.7,
+          rating: 4.8,
           sales: 2000,
           distance: 1.5,
           avg_price: 50,
@@ -75,7 +76,7 @@ export default {
         },
         {
           name: '安格斯牛肉拌饭（华科东校区店）',
-          rating: 4.7,
+          rating: 4.9,
           sales: 2000,
           distance: 1.5,
           avg_price: 50,
@@ -100,23 +101,30 @@ export default {
     //     console.error('Invalid businessid:', businessid);
     //   }
     // },
+      handleClick(index) {
+        this.buttons.forEach((button, i) => {
+          if (i === index) {
+            // 切换升降序
+            if (button.isActive === true) {
+              button.order = button.order === 'asc' ? 'desc' : 'asc';
+              button.label = `${button.label.slice(0, -1)}${button.order === 'asc' ? '↑' : '↓'}`;
+            }
+            button.isActive = true;
 
+            // 根据按钮的 field 和 order 对 stores 进行排序
+            this.stores.sort((a, b) => {
+              if (button.order === 'asc') {
+                return a[button.field] - b[button.field];
+              } else {
+                return b[button.field] - a[button.field];
+              }
+            });
 
-    handleClick(index) {
-      this.buttons.forEach((button, i) => {
-        if (i === index) {
-
-          if (button.isActive === true) {
-            button.order = button.order === 'asc' ? 'desc' : 'asc';
-            button.label = `${button.label.slice(0, -1)}${button.order === 'asc' ? '↑' : '↓'}`;
+          } else {
+            button.isActive = false;
           }
-          button.isActive = true;
-          // this.fetchStores(button.field, button.order);
-
-        } else {
-          button.isActive = false;
-        }
-      });
+        });
+      },
     },
     // fetchStores(sortField = 'rating', sortOrder = 'desc') {
     //   fetch(`http://localhost:8081/business/all?sortField=${sortField}&sortOrder=${sortOrder}`)
@@ -154,8 +162,8 @@ export default {
     //     );
     //   }
     // }
-  },
-}
+};
+
     // logout() {
     //   localStorage.removeItem('userPhone');
     //   this.$router.push({name: 'LogIn'});

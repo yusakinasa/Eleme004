@@ -31,7 +31,7 @@
           <div class="order-summary-total">
             <div class="cost-info total">
               <span class="label">总计：</span>
-              <span class="total-price">¥25.9</span>
+              <span class="total-price">¥{{ totalPrice }}</span>
             </div>
           </div>
         </div>
@@ -101,12 +101,16 @@ export default {
     // 查找并掩码处理shippingDetails中的电话号码
     masked_userPhoneNumber() {
         return this.userPhoneNumber.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+    },
+    totalPrice() {
+      return this.items.reduce((total, item) => total + item.price * item.account, 0).toFixed(2);
     }
   },
   methods: {
     redirectToShop() {
       this.$router.push({ name: 'ShopSelection' });
     }
+
   }
 };
 
@@ -146,7 +150,7 @@ export default {
   margin-left: 10px;
   flex: 3;
 }
-
+/*
 .order-items-list {
   border-bottom: 1px solid #ddd;
   margin-top: 10px;
@@ -185,7 +189,53 @@ export default {
   font-size: 16px;
   text-align: right;
 }
+*/
+/*订单价格部分*/
+.order-items-list {
+  border-bottom: 1px solid #ddd;
+  margin-top: 10px;
+  padding-bottom: 20px;
+}
 
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.item-info {
+  width: 70px;
+}
+
+.item-image {
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+}
+
+.item-name {
+  font-size: 16px;
+}
+
+.item-details {
+  display: flex;
+  flex-direction: column;
+  flex: 8;
+}
+
+.item-quantity {
+  margin-top: 10px;
+  display: flex;
+}
+
+.item-price {
+  flex: 1;
+  padding-right: 20px;
+  font-size: 16px;
+  text-align: right;
+}
+/*订单价格部分*/
 .order-summary-total {
   margin-top: 20px;
 }
@@ -202,6 +252,7 @@ export default {
 
 .total-price {
   color: #f44336;
+  padding-right: 20px;
 }
 
 .shipping-info {
@@ -233,11 +284,11 @@ export default {
   flex: 1;
   display: flex;
   font-weight: bold;
-  margin: 0;
+  margin-bottom: 10px;
 }
 
 .value {
-  margin: 10px;
+  margin-bottom: 10px;
   flex: 1;
   word-wrap: break-word; /* 强制换行 */
   display: flex;
@@ -248,16 +299,19 @@ h3 {
   font-size: 24px;
   font-weight: bold;
   text-align: center;
+  margin: 0 0 50px 0;
 }
 
 .tel-num {
-  border: 1px solid;
-  padding-right: 80px;
   margin-left: 20px;
 }
 
 .contact-info {
   text-align: center;
   margin-top: 50px;
+}
+
+.order-details{
+  margin: 0 0 20px 0;
 }
 </style>
