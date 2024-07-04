@@ -30,7 +30,7 @@
               <span class="store-rating">{{ store.rating }}分</span>
               <span class="monthly-sales">月售{{ store.sales }}+</span>
               <span class="distance">{{ store.distance }}km</span>
-              <span class="avgprice">{¥{ store.avg_price }}</span>
+              <span class="avgprice">¥{{ store.avg_price }}</span>
             </div>
           </div>
         </div>
