@@ -1,112 +1,126 @@
+<!-- OrderConfirmation.vue -->
 <template>
-  <div class="order-confirmation">
-    <h1>确认订单</h1>
-    <div class="info">
-      <div class="selectAddress">选择收货地址</div>
-      <div class="shipping-info">
-        <div class="address" v-if="!editingShippingInfo">
-          地址：{{ selectedShippingInfo.address }}     联系人：{{ selectedShippingInfo.contactName }}     联系电话：{{ selectedShippingInfo.phoneNumber }}
-        </div>
-        <div v-else>
-          <input type="text" v-model="newShippingInfo.address" placeholder="请输入地址">
-          <input type="text" v-model="newShippingInfo.contactName" placeholder="请输入联系人姓名">
-          <input type="text" v-model="newShippingInfo.phoneNumber" placeholder="请输入联系电话">
-          <button @click="saveShippingInfo">保存</button>
-          <button @click="cancelEditShippingInfo">取消</button>
-        </div>
-        <div class="moreAddress" @click="toggleAddressDropdown">{{ moreAddressesVisible ? '收起' : '更多' }}</div>
-      </div>
-    </div>
+  <div>
+    <HeaderBar :showSearch="false" />
 
-    <!-- 更多地址列表 -->
-    <div v-if="moreAddressesVisible" class="more-addresses">
-      <div v-for="(address, index) in addresses" :key="index" class="address-item">
-        <label class="address-item-content">
-          <input type="radio" :checked="index === selectedAddressIndex" @change="selectDefaultAddress(index)">
-          <span>地址：{{ address.address }} 联系人：{{ address.contactName }} 联系电话：{{ address.phoneNumber }}</span>
-        </label>
-      </div>
-      <div v-if="!addingNewAddress" class="add-new-address">
-        <span @click="toggleAddingNewAddress">添加新地址</span>
-      </div>
-      <div v-if="addingNewAddress" class="add-new-address">
-        <input type="text" v-model="newContactName" placeholder="联系人姓名">
-        <input type="text" v-model="newPhoneNumber" placeholder="联系电话">
-        <input type="text" v-model="newAddress" placeholder="请输入新地址">
-        <button @click="addNewAddress">确定</button>
-        <button @click="cancelAddAddress">取消</button>
-      </div>
-    </div>
-
-    <!-- 主要内容区域 -->
-    <div class="main-content">
-      <!-- 配送时间选择器 -->
-      <div class="delivery-time">
-        <label>选择配送时间：</label>
-        <ul>
-          <li v-for="(option, index) in deliveryOptions" :key="index">
-            <input type="radio" :value="option.value" v-model="selectedDeliveryTime">
-            {{ option.label }}
-          </li>
-        </ul>
-        <div v-if="selectedDeliveryTime" class="selected-time">
-          已选配送时间：{{ selectedDeliveryTime }}
-        </div>
-      </div>
-
-
-      <!-- 购物清单 -->
-      <div class="shopping-list-container">
-        <div class="shopping-list">
-          <div class="store-info">
-            氢气层(华科东校区店) - 商家自配送
+    <div class="order-confirmation">
+      <h1>确认订单</h1>
+      <div class="info">
+        <div class="selectAddress">选择收货地址</div>
+        <div class="shipping-info">
+          <div class="address" v-if="!editingShippingInfo">
+            地址：{{ selectedShippingInfo.address }} 联系人：{{ selectedShippingInfo.contactName }} 联系电话：{{ selectedShippingInfo.phoneNumber }}
           </div>
-          <div class="item" v-for="(item, index) in shoppingCart" :key="index">
-            <div class="item-info">
-              {{ item.name }}
+          <div v-else>
+            <input type="text" v-model="newShippingInfo.address" placeholder="请输入地址">
+            <input type="text" v-model="newShippingInfo.contactName" placeholder="请输入联系人姓名">
+            <input type="text" v-model="newShippingInfo.phoneNumber" placeholder="请输入联系电话">
+            <button @click="saveShippingInfo">保存</button>
+            <button @click="cancelEditShippingInfo">取消</button>
+          </div>
+          <button class="moreAddress" @click="toggleAddressDropdown">{{ moreAddressesVisible ? '收起' : '更多' }}</button>
+        </div>
+      </div>
+
+      <!-- 更多地址列表 -->
+      <div v-if="moreAddressesVisible" class="more-addresses">
+        <div v-for="(address, index) in addresses" :key="index" class="address-item">
+          <label class="address-item-content">
+            <input type="radio" :checked="index === selectedAddressIndex" @change="selectDefaultAddress(index)">
+            <span>地址：{{ address.address }} 联系人：{{ address.contactName }} 联系电话：{{ address.phoneNumber }}</span>
+          </label>
+        </div>
+        <button v-if="!addingNewAddress" class="add-new-address">
+          <span @click="toggleAddingNewAddress">添加新地址</span>
+        </button>
+        <div v-if="addingNewAddress" class="add-new-address">
+          <input type="text" v-model="newContactName" placeholder="联系人姓名">
+          <input type="text" v-model="newPhoneNumber" placeholder="联系电话">
+          <input type="text" v-model="newAddress" placeholder="请输入新地址">
+          <button @click="addNewAddress">确定</button>
+          <button @click="cancelAddAddress">取消</button>
+        </div>
+      </div>
+
+      <!-- 主要内容区域 -->
+      <div class="main-content">
+        <!-- 配送时间选择器 -->
+        <div class="delivery-time">
+          <label>选择配送时间：</label>
+          <ul>
+            <li v-for="(option, index) in deliveryOptions" :key="index">
+              <input type="radio" :value="option.value" v-model="selectedDeliveryTime">
+              {{ option.label }}
+            </li>
+          </ul>
+          <div v-if="selectedDeliveryTime" class="selected-time">
+            已选配送时间：{{ selectedDeliveryTime }}
+          </div>
+        </div>
+
+        <!-- 购物清单 -->
+        <div class="shopping-list-container">
+          <div class="shopping-list">
+            <div class="store-info">
+              氢气层(华科东校区店) - 商家自配送
             </div>
-            <div class="price">¥{{ item.price }}</div>
+            <div class="order-items-list">
+              <div class="order-item" v-for="(item, index) in shoppingCart" :key="index">
+                <div class="item-info">
+                  <img :src="item.image" alt="商品图片" class="item-image">
+                </div>
+                <div class="item-details">
+                  <span class="item-name">{{ item.name }}</span>
+                  <span class="item-quantity">×{{ item.account }}</span>
+                </div>
+                <span class="item-price">¥{{ item.price }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="subtotal">
+            <div class="total">
+              小计 ¥{{ calculateSubtotal() }}
+            </div>
           </div>
         </div>
-        <div class="subtotal">
-          <div class="total">
-            小计 ¥{{ calculateSubtotal() }}
-          </div>
+      </div>
+
+      <!-- 支付方式 -->
+      <div class="payment-method">
+        <div class="payment-option">
+          <input type="radio" id="alipay" name="paymentMethod" value="alipay" v-model="selectedPaymentMethod">
+          <label for="alipay">
+            <img src="../assets/alipay-logo.png" alt="支付宝Logo" class="payment-logo">
+            <span class="payment-text">支付宝</span>
+          </label>
+        </div>
+        <div class="payment-option">
+          <input type="radio" id="wechatPay" name="paymentMethod" value="wechatPay" v-model="selectedPaymentMethod">
+          <label for="wechatPay">
+            <img src="../assets/wechatPay-logo.png" alt="微信支付Logo" class="payment-logo">
+            <span class="payment-text">微信支付</span>
+          </label>
         </div>
       </div>
 
-    </div>
-
-    <!-- 支付方式 -->
-    <div class="payment-method">
-      <div class="payment-option">
-        <input type="radio" id="alipay" name="paymentMethod" value="alipay" v-model="selectedPaymentMethod">
-        <label for="alipay">
-          <img src="../assets/alipay-logo.png" alt="支付宝Logo" class="payment-logo">
-          <span class="payment-text">支付宝</span>
-        </label>
+      <!-- 提交按钮 -->
+      <div class="submit-button">
+        <button @click="submitOrder">提交订单</button>
       </div>
-      <div class="payment-option">
-        <input type="radio" id="wechatPay" name="paymentMethod" value="wechatPay" v-model="selectedPaymentMethod">
-        <label for="wechatPay">
-          <img src="../assets/wechatPay-logo.png" alt="微信支付Logo" class="payment-logo">
-          <span class="payment-text">微信支付</span>
-        </label>
-      </div>
-    </div>
-
-    <!-- 提交按钮 -->
-    <div class="submit-button">
-      <button @click="submitOrder">提交订单</button>
     </div>
   </div>
 </template>
 
 <script>
+import HeaderBar from "@/components/HeaderBar.vue"; // 导入 HeaderBar 组件
 import router from "@/router";
-import axios from 'axios'; // 导入Axios库
+import axios from 'axios';
+
 export default {
   name: 'OrderConfirmation',
+  components: {
+    HeaderBar, // 注册 HeaderBar 组件
+  },
   data() {
     return {
       selectedDeliveryTime: '', // 初始化选中的配送时间
@@ -135,10 +149,18 @@ export default {
         address: '地址1'
       }, // 默认收货信息对象
       shoppingCart: [
-        { name: '葡国奶油焗饭+原味鸡块+雪碧', price: '29.9' },
-        { name: '某某商品', price: '20' },
-        { name: '新商品1', price: '15.5' },
-        { name: '新商品2', price: '12.3' }
+        {
+          name: '招牌咖喱鸡饭',
+          price: 19.9,
+          image: 'path/to/image1.jpg',
+          account: 1
+        },
+        {
+          name: '雪碧',
+          price: 5,
+          image: 'path/to/image2.jpg',
+          account: 1
+        },
       ] // 购物车中的商品列表
     };
   },
@@ -255,6 +277,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
 .order-confirmation {
   font-family: Arial, sans-serif;
@@ -302,9 +325,8 @@ export default {
 
 .moreAddress {
   cursor: pointer;
-  color: blue;
+  color: white;
 }
-
 
 .more-addresses {
   border: 1px solid #ccc;
@@ -319,7 +341,6 @@ export default {
 
 .main-content {
   display: flex;
-  align-items: flex-start; /* 确保垂直对齐方式为顶部对齐 */
 }
 
 .delivery-time {
@@ -352,7 +373,6 @@ export default {
   flex: 2;
   border: 1px solid #ccc;
   padding: 10px;
-  margin-bottom: 20px;
   max-height: 218px; /* 调整为适当的高度 */
   overflow-y: auto;
   position: relative;
@@ -382,10 +402,6 @@ export default {
   margin-bottom: 10px;
 }
 
-.item-info {
-  flex-grow: 1;
-}
-
 .price {
   font-weight: bold;
 }
@@ -402,12 +418,14 @@ export default {
 .total {
   font-weight: bold;
   margin-top: 10px;
+  text-align: right;
+  padding-right: 20px;
 }
 
 
 .payment-method {
   display: flex;
-  justify-content: space-between; /* 或者 space-around，根据需要选择 */
+  justify-content: space-evenly; /* 或者 space-around，根据需要选择 */
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 20px;
@@ -438,11 +456,65 @@ button {
   padding: 10px;
   background-color: #007bff;
   color: white;
-  border: none;
+  border: 1px solid;
+  border-radius: 8px;
   cursor: pointer;
 }
 
 button:hover {
   background-color: #0056b3;
 }
+
+.order-items {
+  border: 1px solid #ddd;
+  padding: 30px;
+  margin-left: 10px;
+  flex: 3;
+}
+
+.order-items-list {
+  border-bottom: 1px solid #ddd;
+  margin-top: 10px;
+  padding-bottom: 20px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.item-info {
+  width: 70px;
+}
+
+.item-image {
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+}
+
+.item-name {
+  font-size: 16px;
+}
+
+.item-details {
+  display: flex;
+  flex-direction: column;
+  flex: 8;
+}
+
+.item-quantity {
+  margin-top: 10px;
+  display: flex;
+}
+
+.item-price {
+  flex: 1;
+  padding-right: 20px;
+  font-size: 16px;
+  text-align: right;
+}
+
 </style>
