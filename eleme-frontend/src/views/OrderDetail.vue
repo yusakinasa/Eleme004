@@ -1,6 +1,6 @@
 <!-- src/views/OrderDetails.vue -->
 <template>
-    <!-- 使用 HeaderBar 组件 -->
+  <!-- 使用 HeaderBar 组件 -->
   <HeaderBar :username="username" />
   <div class="order-page">
     <section class="order-details">
@@ -11,7 +11,7 @@
           <p style="text-align: center; font-weight: bold;">感谢信任，期待再次光临</p>
           <div class="contact-info">
             <span>联系商家</span>
-            <span class="tel-num"> 15826506260</span>
+            <span class="tel-num"> {{ contactNumber }}</span>
           </div>
         </div>
         <div class="order-items">
@@ -40,28 +40,20 @@
     <section class="bottom-info">
       <section class="shipping-info">
         <h3>收货人信息</h3>
-        <div class="info-line">
-          <span class="label">收货人: </span>
-          <span class="value">屈唯一</span>
+        <div class="info-line" v-for="(detail, index) in shippingDetails" :key="index">
+          <span class="label">{{ detail.label }}: </span>
+          <span class="value">{{ detail.value }}</span>
         </div>
-        <div class="info-line">
-          <span class="label">地址:</span>
-          <span class="value">湖北武汉市洪山区关山街道华中科技大学东校区韵苑宿舍16栋</span>
-        </div>
-        <div class="info-line">
+        <div class="specific-info">
           <span class="label">手机号码:</span>
-          <span class="value">158*****6260</span>
+          <span class="value">{{masked_userPhoneNumber}}</span>
         </div>
       </section>
       <section class="payment-info">
         <h3>付款信息</h3>
-        <div class="info-line">
-          <span class="label">付款方式:</span>
-          <span class="value">在线支付</span>
-        </div>
-        <div class="info-line">
-          <span class="label">付款时间:</span>
-          <span class="value">2024-05-16 21:58:26</span>
+        <div class="info-line" v-for="(detail, index) in paymentDetails" :key="index">
+          <span class="label">{{ detail.label }}: </span>
+          <span class="value">{{ detail.value }}</span>
         </div>
       </section>
     </section>
@@ -92,8 +84,24 @@ export default {
           image: 'path/to/image2.jpg',
           account: 1
         },
-      ]
+      ],
+      shippingDetails: [
+        { label: '收货人', value: '屈唯一' },
+        { label: '地址', value: '湖北武汉市洪山区关山街道华中科技大学东校区韵苑宿舍16栋' },
+      ],
+      userPhoneNumber:'15826506260',
+      paymentDetails: [
+        { label: '付款方式', value: '在线支付' },
+        { label: '付款时间', value: '2024-05-16 21:58:26' }
+      ],
+      contactNumber: '15826506260' // 商家联系号码
     };
+  },
+  computed: {
+    // 查找并掩码处理shippingDetails中的电话号码
+    masked_userPhoneNumber() {
+        return this.userPhoneNumber.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+    }
   },
   methods: {
     redirectToShop() {
@@ -101,6 +109,7 @@ export default {
     }
   }
 };
+
 </script>
 
 <style scoped>
@@ -213,6 +222,10 @@ export default {
 }
 
 .info-line{
+  display: flex;
+}
+
+.specific-info {
   display: flex;
 }
 

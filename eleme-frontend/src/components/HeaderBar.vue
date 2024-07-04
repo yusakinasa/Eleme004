@@ -46,7 +46,7 @@ export default {
       this.$router.push({name: 'search'});
     },
     viewOrders() {
-      this.$router.push({name: 'OrderDetails'});
+      this.$router.push({name: 'MyOrder'});
     }
   }
 };
