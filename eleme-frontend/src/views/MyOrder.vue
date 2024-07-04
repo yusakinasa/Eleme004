@@ -59,14 +59,14 @@ export default {
     };
   },
   methods: {
-    viewOrder(orderid) {
+    viewOrder(id) {
       // 实现订单详情查看功能
       this.$router.push({name:'OrderDetails'});
       console.log(`查看订单 ${id}`);
     },
-    deleteOrder(orderid) {
+    deleteOrder(id) {
       // 实现订单删除功能
-      this.orders = this.orders.filter(order => order.orderid !== orderid);
+      this.orders = this.orders.filter(order => order.id !== id);
     },
 
   },

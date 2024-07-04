@@ -1,4 +1,3 @@
-<!-- OrderConfirmation.vue -->
 <template>
   <div>
     <HeaderBar :showSearch="false" />
@@ -62,16 +61,16 @@
         <div class="shopping-list-container">
           <div class="shopping-list">
             <div class="store-info">
-              氢气层(华科东校区店) - 商家自配送
+              {{ storeName }} - 商家自配送
             </div>
             <div class="order-items-list">
               <div class="order-item" v-for="(item, index) in shoppingCart" :key="index">
                 <div class="item-info">
-                  <img :src="item.image" alt="商品图片" class="item-image">
+                  <img :src="item.imageurl" alt="商品图片" class="item-image">
                 </div>
                 <div class="item-details">
                   <span class="item-name">{{ item.name }}</span>
-                  <span class="item-quantity">×{{ item.account }}</span>
+                  <span class="item-quantity">×{{ item.quantity }}</span>
                 </div>
                 <span class="item-price">¥{{ item.price }}</span>
               </div>
@@ -113,7 +112,6 @@
 
 <script>
 import HeaderBar from "@/components/HeaderBar.vue"; // 导入 HeaderBar 组件
-import router from "@/router";
 import axios from 'axios';
 
 export default {
@@ -136,7 +134,8 @@ export default {
       selectedShippingInfo: {
         contactName: '张三',
         phoneNumber: '123456789',
-        address: '地址1'
+        address: '地址1',
+        addressid: 1  // 假设地址ID为1
       }, // 选中的收货信息对象
       newContactName: '', // 新的联系人姓名
       newPhoneNumber: '', // 新的联系电话
@@ -148,25 +147,29 @@ export default {
         phoneNumber: '123456789',
         address: '地址1'
       }, // 默认收货信息对象
-      shoppingCart: [
-        {
-          name: '招牌咖喱鸡饭',
-          price: 19.9,
-          image: 'path/to/image1.jpg',
-          account: 1
-        },
-        {
-          name: '雪碧',
-          price: 5,
-          image: 'path/to/image2.jpg',
-          account: 1
-        },
-      ] // 购物车中的商品列表
+      storeName: '',
+      shoppingCart: [], // 购物车中的商品列表
+      userPhone: '', // 用户手机号
+      businessid: '' // 商家ID
     };
   },
   created() {
-    this.generateDeliveryOptions();
+    const items = JSON.parse(this.$route.query.items || '[]');
+    this.storeName = this.$route.query.storeName || '';
+    this.userPhone = this.$route.query.userPhone || ''; // 获取用户手机号
+    this.businessid = this.$route.query.businessid || ''; // 获取商家ID
+
+    // 将 items 解析为购物车中的商品列表
+    this.shoppingCart = items.map(item => ({
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      foodid: item.foodid,
+      imageurl: item.imageurl // 假设商品有 imageurl 属性
+    }));
+    this.generateDeliveryOptions(); // 生成配送时间选项
   },
+
   methods: {
     generateDeliveryOptions() {
       const now = new Date();
@@ -194,29 +197,24 @@ export default {
       this.selectedDeliveryTime = this.deliveryOptions[0].value; // 默认选择第一个选项
     },
     submitOrder() {
-      // 准备发送到后端的数据
       const orderData = {
-        shippingInfo: this.selectedShippingInfo,
-        deliveryTime: this.selectedDeliveryTime,
-        paymentMethod: this.selectedPaymentMethod,
-        shoppingCart: this.shoppingCart
+        userid: this.userPhone,
+        businessid: this.businessid,
+        totalprice: this.calculateSubtotal(),
+        deliverytime: this.selectedDeliveryTime,
+        paymentmethod: this.selectedPaymentMethod,
+        addressid: this.selectedShippingInfo.addressid,
+        items: this.shoppingCart,
       };
 
-      // 实际的后端API端点URL；替换为您的后端API端点
-      const apiUrl = 'http://localhost:8080/';
-
-      // 使用Axios发送POST请求到后端
-      axios.post(apiUrl, orderData)
-          .then(() => {
-            alert('订单已提交');
-            router.push({ name: 'PayComplete' });
+      axios.post('http://localhost:8080/api/order', orderData)
+          .then(response => {
+            console.log('订单提交成功:', response.data);
+            this.$router.push({ name: 'PayComplete' });
           })
           .catch(error => {
-            console.error('提交订单时出错:', error);
-            alert('提交订单时出错，请重试。');
+            console.error('订单提交失败:', error);
           });
-
-
     },
     toggleAddressDropdown() {
       this.moreAddressesVisible = !this.moreAddressesVisible;
@@ -262,20 +260,18 @@ export default {
       this.selectedShippingInfo = {
         address: this.addresses[index].address,
         contactName: this.addresses[index].contactName,
-        phoneNumber: this.addresses[index].phoneNumber
+        phoneNumber: this.addresses[index].phoneNumber,
+        addressid: index + 1  // 假设 addressid 与索引相关
       };
       this.moreAddressesVisible = false; // 收起更多地址列表
     },
     calculateSubtotal() {
-      let subtotal = 0;
-      this.shoppingCart.forEach(item => {
-        subtotal += parseFloat(item.price);
-      });
-      return subtotal.toFixed(2);
+      return this.shoppingCart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
     }
   }
 };
 </script>
+
 
 
 <style scoped>
