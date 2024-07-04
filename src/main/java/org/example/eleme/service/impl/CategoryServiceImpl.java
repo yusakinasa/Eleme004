@@ -1,36 +1,23 @@
 package org.example.eleme.service.impl;
 
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.eleme.mapper.CategoryMapper;
 import org.example.eleme.model.Category;
 import org.example.eleme.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("categoryService")
-public class CategoryServiceImpl extends ServiceImpl<CategoryMapper,Category>  implements CategoryService {
+@Service
+public class CategoryServiceImpl implements CategoryService {
 
+    @Autowired
+    private CategoryMapper categoryMapper;
 
-
-    public List<Category> getAllCategories() {
-        return baseMapper.getAll();
+    @Override
+    public List<Category> getCategoriesByBusinessId(Long businessid
+    ) {
+        return categoryMapper.getCategoriesByBusinessId(businessid);
     }
-
-//    public Category getCategoryById(Long id) {
-//        return userRepository.findById(id).orElse(null);
-//    }
-//
-//    public Category createCategory(Category user) {
-//        return userRepository.save(user);
-//    }
-//
-//    public void deleteCategory(Long id) {
-//        userRepository.deleteById(id);
-//    }
-//
-//    public Category getCategoryByCategoryname(String username) {
-//        return userRepository.findByCategoryname(username);
-//    }
 }
+
