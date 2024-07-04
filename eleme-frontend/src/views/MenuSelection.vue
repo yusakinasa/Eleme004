@@ -7,7 +7,7 @@
         <span>ELEME</span>
       </div>
       <div class="search-bar">
-        <input type="text" placeholder="搜索">
+        <input type="text" v-model="searchQuery" placeholder="搜索">
         <button @click="search">搜索</button>
       </div>
       <div class="user-info">
@@ -46,8 +46,8 @@
         <div class="menu-content">
           <div v-if="currentTab === '推荐菜'" class="recommendation-section">
             <div class="menu-items">
-              <div class="menu-item" v-for="item in menuItems" :key="item.id">
-                <img :src="item.image" :alt="item.name">
+              <div class="menu-item" v-for="item in filteredMenuItems" :key="item.foodid">
+                <img :src="item.imageurl" :alt="item.name">
                 <div class="item-details">
                   <h3>{{ item.name }}</h3>
                   <p>¥{{ item.price }}</p>
@@ -70,8 +70,8 @@
       <div class="cart">
         <h3>已选商品</h3>
         <div class="cart-items">
-          <div class="cart-item" v-for="item in cartItems" :key="item.id">
-            <img :src="item.image" alt="item.name">
+          <div class="cart-item" v-for="item in cartItems" :key="item.foodid">
+            <img :src="item.imageurl" alt="item.name">
             <div class="item-details">
               <h4>{{ item.name }}</h4>
               <p>¥{{ item.price }} x {{ item.quantity }}</p>
@@ -107,16 +107,12 @@ export default {
       currentStore: {},
       tabs: ['推荐菜', '环境', '价目表', '官方相册', '品牌故事', '食品安全档案'],
       currentTab: '推荐菜',
-      menuItems: [
-        { id: 1, name: '【经典】自选5件套', price: 25, image: 'item1.png', quantity: 0 },
-        { id: 2, name: '【特价】招牌鸡翅', price: 10, image: 'item2.png', quantity: 0 },
-        { id: 3, name: '【新品】炸鸡汉堡', price: 20, image: 'item3.png', quantity: 0 },
-        { id: 4, name: '【新品】薯条', price: 30, image: 'item4.png', quantity: 0 },
-        { id: 5, name: '【新品】鸡肉卷', price: 40, image: 'item5.png', quantity: 0 }
-      ],
+      menuItems: [],
+      filteredMenuItems: [],
       cartItems: [],
       userPhone: '',
-      loading: true
+      loading: true,
+      searchQuery: ''
     };
   },
   computed: {
@@ -129,12 +125,30 @@ export default {
       axios.get(`http://localhost:8081/business/${businessid}`)
           .then(response => {
             this.currentStore = response.data;
+            this.fetchMenuItems(businessid);
             this.loading = false;
           })
           .catch(error => {
             console.error('获取店铺详情失败:', error);
             this.loading = false;
           });
+    },
+    fetchMenuItems(businessid) {
+      axios.get(`http://localhost:8081/food/business/${businessid}`)
+          .then(response => {
+            this.menuItems = response.data.map(item => ({
+              ...item,
+              quantity: 0
+            }));
+            this.filteredMenuItems = this.menuItems;
+          })
+          .catch(error => {
+            console.error('获取菜单失败:', error);
+          });
+    },
+    search() {
+      const query = this.searchQuery.toLowerCase();
+      this.filteredMenuItems = this.menuItems.filter(item => item.name.toLowerCase().includes(query));
     },
     increaseQuantity(item) {
       item.quantity++;
