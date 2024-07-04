@@ -17,8 +17,8 @@
           <p>支付方式: {{ order.payment }}</p>
         </div>
         <div class="order-actions">
-          <button @click="viewOrder(order.id)">订单详情</button>
-          <button @click="deleteOrder(order.id)">删除</button>
+          <button @click="viewOrder(order.orderid)">订单详情</button>
+          <button @click="deleteOrder(order.orderid)">删除</button>
         </div>
       </div>
     </div>
@@ -59,16 +59,18 @@ export default {
     };
   },
   methods: {
-    viewOrder(id) {
+    viewOrder(orderid) {
       // 实现订单详情查看功能
       this.$router.push({name:'OrderDetails'});
       console.log(`查看订单 ${id}`);
     },
-    deleteOrder(id) {
+    deleteOrder(orderid) {
       // 实现订单删除功能
-      this.orders = this.orders.filter(order => order.id !== id);
+      this.orders = this.orders.filter(order => order.orderid !== orderid);
     },
+
   },
+
 };
 </script>
 

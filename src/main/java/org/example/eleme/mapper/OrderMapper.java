@@ -9,6 +9,8 @@ import java.util.List;
 
 @Mapper
 public interface OrderMapper extends BaseMapper<Order> {
-    @Select("select * from order")
+    @Select("select * from `order`")
     List<Order> getAll();
+
+
 }
