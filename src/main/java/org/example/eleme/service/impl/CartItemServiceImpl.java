@@ -1,36 +1,29 @@
 package org.example.eleme.service.impl;
 
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.eleme.mapper.CartItemMapper;
 import org.example.eleme.model.CartItem;
 import org.example.eleme.service.CartItemService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+@Service
+public class CartItemServiceImpl implements CartItemService {
 
-@Service("cartItemService")
-public class CartItemServiceImpl extends ServiceImpl<CartItemMapper,CartItem>  implements CartItemService {
+    @Autowired
+    private CartItemMapper cartItemMapper;
 
-
-
-    public List<CartItem> getAllCartItems() {
-        return baseMapper.getAll();
+    @Override
+    @Transactional
+    public void addToCart(CartItem cartItem) {
+        cartItemMapper.insertCartItem(cartItem);
     }
 
-//    public CartItem getCartItemById(Long id) {
-//        return userRepository.findById(id).orElse(null);
-//    }
-//
-//    public CartItem createCartItem(CartItem user) {
-//        return userRepository.save(user);
-//    }
-//
-//    public void deleteCartItem(Long id) {
-//        userRepository.deleteById(id);
-//    }
-//
-//    public CartItem getCartItemByCartItemname(String username) {
-//        return userRepository.findByCartItemname(username);
-//    }
+    @Override
+    @Transactional
+    public void removeFromCart(Long cartitemid) {
+        cartItemMapper.deleteCartItemById(cartitemid);
+    }
 }
+
+

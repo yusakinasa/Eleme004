@@ -1,31 +1,25 @@
 package org.example.eleme.controller;
 
-
+import org.example.eleme.model.Cart;
 import org.example.eleme.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/api/cart")
 public class CartController {
-//    private CartMapper cartMapper;
 
     @Autowired
     private CartService cartService;
 
+    @PostMapping("/add")
+    public void addToCart(@RequestBody Cart cart) {
+        cartService.addToCart(cart);
+    }
 
-
-    @RequestMapping("/all")
-    public Map<String,Object> getAll(){
-//        cartService.
-
-        Map mapjson = new HashMap<>();
-        mapjson.put("data",cartService.getAllCarts());
-        System.out.println(mapjson);
-        return mapjson;
+    @DeleteMapping("/remove/{cartid}")
+    public void removeFromCart(@PathVariable Long cartid) {
+        cartService.removeFromCart(cartid);
     }
 }
+

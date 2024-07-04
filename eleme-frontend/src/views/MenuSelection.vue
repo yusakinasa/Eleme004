@@ -80,10 +80,12 @@
               </div>
             </div>
           </div>
-          <div class="total">
-            <span>共计 {{ totalPrice }} ¥</span>
-            <button @click="redirectToOrderConfirm">去结算</button>
-          </div>
+
+        </div>
+        <div class="total">
+          <span>共计 {{ totalPrice }} ¥</span>
+          <button @click="checkout">去结算</button>
+
         </div>
       </div>
     </div>
@@ -159,19 +161,65 @@ export default {
     }
   },
   methods: {
-    // fetchStoreDetails(businessid) {
-    //   axios.get(`http://localhost:8081/business/${businessid}`)
-    //       .then(response => {
-    //         this.currentStore = response.data;
-    //         this.loading = false;
-    //       })
-    //       .catch(error => {
-    //         console.error('获取店铺详情失败:', error);
-    //         this.loading = false;
-    //       });
-    // },
-    redirectToOrderConfirm() {
-      this.$router.push({name:'OrderConfirm'});
+    checkout() {
+      // Redirect to OrderConfirm component with selected cart items
+      this.$router.push({
+        name: 'OrderConfirm',
+        query: { items: JSON.stringify(this.cartItems) }
+      });
+    },
+    addToCart(item) {
+      axios.post(`http://localhost:8080/api/cart-item/add`, {
+        foodid: item.foodid,
+        quantity: item.quantity
+      })
+          .then(() => {
+            // 添加成功后更新视图或其他逻辑
+            // 例如从数据库获取最新的购物车信息
+          })
+          .catch(error => {
+            console.error('添加商品到购物车失败:', error);
+          });
+    },
+    removeFromCart(cartitemid) {
+      axios.delete(`http://localhost:8080/api/cart-item/remove/${cartitemid}`)
+          .then(() => {
+            // 移除成功后更新视图或其他逻辑
+            // 例如从数据库获取最新的购物车信息
+          })
+          .catch(error => {
+            console.error('从购物车移除商品失败:', error);
+          });
+    },
+    fetchStoreDetails(businessid) {
+      axios.get(`http://localhost:8081/business/${businessid}`)
+          .then(response => {
+            this.currentStore = response.data;
+            this.fetchMenuItems(businessid);
+            this.loading = false;
+          })
+          .catch(error => {
+            console.error('获取店铺详情失败:', error);
+            this.loading = false;
+          });
+    },
+    fetchMenuItems(businessid) {
+      axios.get(`http://localhost:8081/food/business/${businessid}`)
+          .then(response => {
+            this.menuItems = response.data.map(item => ({
+              ...item,
+              quantity: 0
+            }));
+            this.filteredMenuItems = this.menuItems;
+          })
+          .catch(error => {
+            console.error('获取菜单失败:', error);
+          });
+    },
+    search() {
+      const query = this.searchQuery.toLowerCase();
+      this.filteredMenuItems = this.menuItems.filter(item => item.name.toLowerCase().includes(query));
+
     },
 
     increaseQuantity(item) {

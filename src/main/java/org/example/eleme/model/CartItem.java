@@ -22,6 +22,9 @@ public class CartItem {
 
     private Cart cart;   // 关联的 Cart 对象
     private Food food;   // 关联的 Food 对象
+    public BigDecimal getPrice() {
+        return food != null ? food.getPrice() : BigDecimal.ZERO;
+    }
 
 
     @Override
