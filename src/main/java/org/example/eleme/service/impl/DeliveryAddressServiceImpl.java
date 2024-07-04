@@ -12,10 +12,19 @@ import java.util.List;
 @Service("deliveryAddressService")
 public class DeliveryAddressServiceImpl extends ServiceImpl<DeliveryAddressMapper,DeliveryAddress>  implements DeliveryAddressService {
 
-
-
+    DeliveryAddressMapper deliveryAddressMapper;
+    @Override
     public List<DeliveryAddress> getAllDeliveryAddresses() {
         return baseMapper.getAll();
+    }
+    @Override
+    public void saveDeliveryAddress(DeliveryAddress deliveryAddress) {
+        baseMapper.insertDeliveryAddress(deliveryAddress);
+    }
+
+    @Override
+    public void deleteDeliveryAddress(Long id) {
+        deliveryAddressMapper.deleteDeliveryAddress(id);
     }
 
 //    public DeliveryAddress getDeliveryAddressById(Long id) {
