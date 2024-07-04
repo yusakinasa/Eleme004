@@ -1,21 +1,10 @@
 package org.example.eleme.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import org.example.eleme.model.Order;
-
 import java.util.List;
 
-
-public interface OrderService extends IService<Order> {
-
-
-    public List<Order> getAllOrders() ;
-
-//    public Order getOrderById(Long id);
-//
-//    public Order createOrder(Order user);
-//
-//    public void deleteOrder(Long id);
-//
-//    public Order getOrderByOrdername(String username);
+public interface OrderService {
+    void createOrder(Order order);
+    List<Order> getOrdersByUserId(Long userid);
+    void deleteOrder(Long orderid);  // 添加删除订单的方法
 }
