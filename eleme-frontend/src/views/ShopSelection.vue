@@ -260,6 +260,7 @@
 
 
 <template>
+<!--  <img src="../assets/shops/shop1.png" alt="">-->
   <div class="eleme-page">
     <header class="header">
       <button class="logo-btn" @click="logoclick">

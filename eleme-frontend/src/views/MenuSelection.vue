@@ -44,21 +44,21 @@
 
             </div>
           </div>
-          <div class="menu-tabs">
-          <span
-              v-for="tab in tabs"
-              :key="tab"
-              :class="{ active: currentTab === tab }"
-              @click="currentTab = tab"
-          >
-            {{ tab }}
-          </span>
-          </div>
+<!--          <div class="menu-tabs">-->
+<!--          <span-->
+<!--              v-for="tab in tabs"-->
+<!--              :key="tab"-->
+<!--              :class="{ active: currentTab === tab }"-->
+<!--              @click="currentTab = tab"-->
+<!--          >-->
+<!--            {{ tab }}-->
+<!--          </span>-->
+<!--          </div>-->
           <div class="menu-content">
             <div v-if="currentTab === '推荐菜'" class="recommendation-section">
               <div class="menu-items">
                 <div class="menu-item" v-for="item in filteredMenuItems" :key="item.foodid">
-                  <img :src="item.imageurl" :alt="item.name">
+                  <img :src="item.imageurl" :alt="item.name" style="max-width: 50%; max-height: 50%;">
                   <div class="item-details">
                     <h3>{{ item.name }}</h3>
                     <p>¥{{ item.price }}</p>

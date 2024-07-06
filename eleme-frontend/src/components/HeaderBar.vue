@@ -2,7 +2,7 @@
 <template>
   <header class="header">
     <button class="logo-btn" @click="logoclick">
-      <img src="@/assets/eleme-logo.png" alt="Eleme Logo" class="logo"/>
+      <img src="../assets/eleme-logo.png" alt="Eleme Logo" class="logo"/>
       <h1>ELEME</h1>
     </button>
     <div class="search-bar" v-if="showSearch">
@@ -10,7 +10,7 @@
       <button @click="search">搜索</button>
     </div>
     <div class="user-info">
-      <span>{{ username }}</span>
+      <span>{{ userPhone }}</span>
       <button @click="viewOrders">我的订单</button>
       <button @click="logout">退出</button>
     </div>
@@ -20,11 +20,8 @@
 <script>
 export default {
   name: 'HeaderBar',
+  userPhone:'',
   props: {
-    username: {
-      type: String,
-      default: '用户'
-    },
     showSearch: {
       type: Boolean,
       default: true  // 默认显示搜索框
@@ -48,6 +45,10 @@ export default {
     viewOrders() {
       this.$router.push({name: 'MyOrder'});
     }
+
+  },
+  created() {
+    this.userPhone = localStorage.getItem('userPhone');
   }
 };
 </script>

@@ -19,11 +19,12 @@ public class Order {
     private Long userid;
     private Long businessid;
     private BigDecimal totalprice;
-    private LocalDateTime deliverytime;
+    private String deliverytime;
     private String paymentmethod;
     private Long addressid;
 
-
+//    private Business business;
+//    private DeliveryAddress deliveryAddress;
 
     @Override
     public String toString() {

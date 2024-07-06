@@ -12,4 +12,12 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
     @Select("select * from user")
     List<User> getAll();
+
+    @Select("SELECT * FROM user WHERE phone = #{phone}")
+    User selectByPhone(String phone);
+
+    @Select("SELECT userid FROM user WHERE phone = #{phone}")
+    Long selectUserIdByPhone(String phone);
+
+
 }
