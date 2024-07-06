@@ -15,7 +15,7 @@
           </div>
         </div>
         <div class="order-items">
-          <el-button class="shop-redirect-btn" type="text" @click="redirectToShop">氛气层（华科东校区店）></el-button>
+          <el-button class="shop-redirect-btn" type="text" @click="redirectToShop">红张飞 · 中国炸鸡（华科校园店）></el-button>
           <div class="order-items-list">
             <div class="order-item" v-for="(item, index) in items" :key="index">
               <div class="item-info">
@@ -73,16 +73,16 @@ export default {
       username: 'user256',
       items: [
         {
-          name: '招牌咖喱鸡饭',
-          price: 19.9,
-          image: 'path/to/image1.jpg',
+          name: '软糯年糕',
+          price: 6.70,
+          image: 'http://localhost:8081/static/images/food1.png',
           account: 1
         },
         {
-          name: '雪碧',
-          price: 5,
-          image: 'path/to/image2.jpg',
-          account: 1
+          name: '云南爆浆豆腐',
+          price: 5.40,
+          image: 'http://localhost:8081/static/images/food2.png',
+          account: 2
         },
       ],
       shippingDetails: [
@@ -91,10 +91,10 @@ export default {
       ],
       userPhoneNumber:'15826506260',
       paymentDetails: [
-        { label: '付款方式', value: '在线支付' },
-        { label: '付款时间', value: '2024-05-16 21:58:26' }
+        { label: '付款方式', value: 'wechatpay' },
+        // { label: '付款时间', value: '2024-05-16 21:58:26' }
       ],
-      contactNumber: '15826506260' // 商家联系号码
+      contactNumber: '15071125798' // 商家联系号码
     };
   },
   computed: {

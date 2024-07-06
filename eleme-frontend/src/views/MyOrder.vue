@@ -1,34 +1,47 @@
 <template>
   <div>
     <!-- 使用 HeaderBar 组件 -->
-    <HeaderBar :username="username" :showSearch="true" />
-  <div class="myorder-page">
-    <h2>我的订单</h2>
-    <div class="order-list">
-      <div class="order" v-for="order in orders" :key="order.id">
-        <img :src="order.image" alt="order image" />
-        <div class="order-info">
-          <p>{{ order.name }}</p>
-          <p>{{ order.date }}</p>
-        </div>
-        <div class="order-details">
-          <p>收货人: {{ order.recipient }}</p>
-          <p>金额: {{ order.amount }}</p>
-          <p>支付方式: {{ order.payment }}</p>
-        </div>
-        <div class="order-actions">
-          <button @click="viewOrder(order.orderid)">订单详情</button>
-          <button @click="deleteOrder(order.orderid)">删除</button>
+<!--    <header class="header">-->
+<!--      <button class="logo-btn" @click="logoclick">-->
+<!--        <img src="@/assets/eleme-logo.png" alt="Eleme Logo" class="logo"/>-->
+<!--        <h1>ELEME</h1>-->
+<!--      </button>-->
+<!--      <div class="search-bar" v-if="showSearch">-->
+<!--        <input type="text" placeholder="搜索" v-model="searchQuery" @keyup.enter="search">-->
+<!--        <button @click="search">搜索</button>-->
+<!--      </div>-->
+<!--      <div class="user-info">-->
+<!--        <span>{{ username }}</span>-->
+<!--        <button @click="viewOrders">我的订单</button>-->
+<!--        <button @click="logout">退出</button>-->
+<!--      </div>-->
+<!--    </header>-->
+    <HeaderBar :username="username" :showSearch="false" />
+    <div class="myorder-page">
+      <h2>我的订单</h2>
+      <div class="order-list">
+        <div class="order" v-for="order in orders" :key="order.orderid">
+
+          <div class="order-info">
+            <p>2024 年 7 月 5 日 {{ order.deliverytime }}</p>
+          </div>
+          <div class="order-details">
+            <p>金额: {{ order.totalprice }}</p>
+            <p>支付方式: {{ order.paymentmethod }}</p>
+          </div>
+          <div class="order-actions">
+            <button @click="viewOrder(order.orderid)">订单详情</button>
+<!--            <button @click="deleteOrder(order.orderid)">删除</button>-->
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
 <script>
 import HeaderBar from '@/components/HeaderBar.vue';
-import axios from "axios"; // 引入 HeaderBar 组件
+import axios from "axios";
 
 export default {
   components: {
@@ -58,6 +71,7 @@ export default {
       axios.get(`http://localhost:8080/api/orders/${userPhone}`)
           .then(response => {
             this.orders = response.data;
+            console.log(this.orders);
           })
           .catch(error => {
             console.error('获取订单失败:', error);
@@ -66,9 +80,9 @@ export default {
   },
   created() {
     this.username = localStorage.getItem('userPhone');
+    // console.log(this.username);
     this.fetchOrders();
   }
-
 };
 </script>
 

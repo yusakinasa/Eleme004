@@ -8,12 +8,12 @@
         <div class="selectAddress">选择收货地址</div>
         <div class="shipping-info">
           <div class="address" v-if="!editingShippingInfo">
-            地址：{{ selectedShippingInfo.address }} 联系人：{{ selectedShippingInfo.contactName }} 联系电话：{{ selectedShippingInfo.phoneNumber }}
+            地址：{{ selectedShippingInfo.address }} 联系人：{{ selectedShippingInfo.contactname }} 联系电话：{{ selectedShippingInfo.contactphone }}
           </div>
           <div v-else>
             <input type="text" v-model="newShippingInfo.address" placeholder="请输入地址">
-            <input type="text" v-model="newShippingInfo.contactName" placeholder="请输入联系人姓名">
-            <input type="text" v-model="newShippingInfo.phoneNumber" placeholder="请输入联系电话">
+            <input type="text" v-model="newShippingInfo.contactname" placeholder="请输入联系人姓名">
+            <input type="text" v-model="newShippingInfo.contactphone" placeholder="请输入联系电话">
             <button @click="saveShippingInfo">保存</button>
             <button @click="cancelEditShippingInfo">取消</button>
           </div>
@@ -26,7 +26,7 @@
         <div v-for="(address, index) in addresses" :key="index" class="address-item">
           <label class="address-item-content">
             <input type="radio" :checked="index === selectedAddressIndex" @change="selectDefaultAddress(index)">
-            <span>地址：{{ address.address }} 联系人：{{ address.contactName }} 联系电话：{{ address.phoneNumber }}</span>
+            <span>地址：{{ address.address }} 联系人：{{ address.contactname }} 联系电话：{{ address.contactphone }}</span>
           </label>
         </div>
         <button v-if="!addingNewAddress" class="add-new-address">
@@ -61,7 +61,7 @@
         <div class="shopping-list-container">
           <div class="shopping-list">
             <div class="store-info">
-              {{ storeName }} - 商家自配送
+              {{ storeName }}
             </div>
             <div class="order-items-list">
               <div class="order-item" v-for="(item, index) in shoppingCart" :key="index">
@@ -125,17 +125,12 @@ export default {
       deliveryOptions: [], // 存储配送时间选项的数组
       moreAddressesVisible: false, // 控制更多地址列表的显示状态
       addingNewAddress: false, // 控制添加新地址表单的显示状态
-      addresses: [
-        { contactName: '张三', phoneNumber: '123456789', address: '地址1' },
-        { contactName: '李四', phoneNumber: '987654321', address: '地址2' },
-        { contactName: '王五', phoneNumber: '135792468', address: '地址3' }
-      ], // 示例地址列表
-      selectedAddressIndex: 0, // 选中的地址索引
+      addresses: [], // 示例地址列表
+      selectedAddressIndex: -1, // 选中的地址索引
       selectedShippingInfo: {
-        contactName: '张三',
-        phoneNumber: '123456789',
-        address: '地址1',
-        addressid: 1  // 假设地址ID为1
+        contactname: '',
+        contactphone: '',
+        address: ''
       }, // 选中的收货信息对象
       newContactName: '', // 新的联系人姓名
       newPhoneNumber: '', // 新的联系电话
@@ -143,17 +138,14 @@ export default {
       selectedPaymentMethod: 'alipay', // 初始选择支付宝支付
       editingShippingInfo: false,
       newShippingInfo: {
-        contactName: '张三',
-        phoneNumber: '123456789',
-        address: '地址1'
+        contactname: '',
+        contactphone: '',
+        address: ''
       }, // 默认收货信息对象
-      storeName: '',
-      shoppingCart: [], // 购物车中的商品列表
-      userPhone: '', // 用户手机号
-      businessid: '' // 商家ID
     };
   },
   created() {
+    this.fetchAddresses();
     const items = JSON.parse(this.$route.query.items || '[]');
     this.storeName = this.$route.query.storeName || '';
     this.userPhone = this.$route.query.userPhone || ''; // 获取用户手机号
@@ -196,77 +188,123 @@ export default {
 
       this.selectedDeliveryTime = this.deliveryOptions[0].value; // 默认选择第一个选项
     },
+
+    fetchAddresses() {
+      // 实际的后端API端点URL；替换为您的后端API端点
+      const apiUrl = 'http://localhost:8081/delivery_address/all';
+
+      axios.get(apiUrl)
+          .then(response => {
+            // 成功获取到地址列表数据
+            this.addresses = response.data.data;
+            if (this.addresses.length > 0) {
+              // 默认选中第一个地址
+              this.selectDefaultAddress(0);
+              this.selectedShippingInfo = {
+                address: this.addresses[0].address,
+                contactname: this.addresses[0].contactname,
+                contactphone: this.addresses[0].contactphone
+              };
+            }
+            else {
+              // 清空选中的地址信息
+              this.selectedAddressIndex = -1;
+              this.selectedShippingInfo = {
+                address: '',
+                contactname: '',
+                contactphone: ''
+              };
+            }
+          })
+          .catch(error => {
+            console.error('获取地址列表时出错:', error);
+            alert('获取地址列表时出错，请重试。');
+          });
+    },
+
     submitOrder() {
       const orderData = {
-        userid: this.userPhone,
-        businessid: this.businessid,
+        // orderid:2,
+        userid: 1, // 默认值
+        businessid: 1, // 默认值
         totalprice: this.calculateSubtotal(),
         deliverytime: this.selectedDeliveryTime,
         paymentmethod: this.selectedPaymentMethod,
-        addressid: this.selectedShippingInfo.addressid,
-        items: this.shoppingCart,
+        addressid: 1, // 默认值
       };
 
-      axios.post('http://localhost:8080/api/order', orderData)
+      console.log(orderData);
+
+      axios.post('http://localhost:8081/api/create', orderData)
           .then(response => {
             console.log('订单提交成功:', response.data);
-            this.$router.push({ name: 'PayComplete' });
+            alert('订单提交成功！');
+            this.$router.push({name: 'PayComplete'});
           })
           .catch(error => {
             console.error('订单提交失败:', error);
+            alert('订单提交失败，请重试。');
           });
     },
-    toggleAddressDropdown() {
-      this.moreAddressesVisible = !this.moreAddressesVisible;
+
+    calculateSubtotal() {
+      return this.shoppingCart.reduce((total, item) => {
+        return total + (item.price * item.quantity);
+      }, 0);
     },
-    toggleAddingNewAddress() {
-      this.addingNewAddress = !this.addingNewAddress;
-    },
-    saveShippingInfo() {
-      if (this.newShippingInfo.address.trim() !== '' && this.newShippingInfo.contactName.trim() !== '' && this.newShippingInfo.phoneNumber.trim() !== '') {
-        this.editingShippingInfo = false;
+
+    selectDefaultAddress(index) {
+      if (index >= 0 && index < this.addresses.length) {
+        this.selectedAddressIndex = index;
         this.selectedShippingInfo = {
-          address: this.newShippingInfo.address,
-          contactName: this.newShippingInfo.contactName,
-          phoneNumber: this.newShippingInfo.phoneNumber
+          address: this.addresses[index].address,
+          contactname: this.addresses[index].contactname,
+          contactphone: this.addresses[index].contactphone
         };
       }
     },
+
+    toggleAddressDropdown() {
+      this.moreAddressesVisible = !this.moreAddressesVisible;
+    },
+
+    toggleAddingNewAddress() {
+      this.addingNewAddress = !this.addingNewAddress;
+    },
+
+    addNewAddress() {
+      if (this.newAddress && this.newContactName && this.newPhoneNumber) {
+        this.addresses.push({
+          address: this.newAddress,
+          contactname: this.newContactName,
+          contactphone: this.newPhoneNumber
+        });
+        this.newAddress = '';
+        this.newContactName = '';
+        this.newPhoneNumber = '';
+        this.addingNewAddress = false;
+      }
+    },
+
+    cancelAddAddress() {
+      this.newAddress = '';
+      this.newContactName = '';
+      this.newPhoneNumber = '';
+      this.addingNewAddress = false;
+    },
+
+    editShippingInfo() {
+      this.editingShippingInfo = true;
+      this.newShippingInfo = { ...this.selectedShippingInfo }; // 创建选中地址信息的副本
+    },
+
     cancelEditShippingInfo() {
       this.editingShippingInfo = false;
     },
-    addNewAddress() {
-      if (this.newContactName.trim() !== '' && this.newPhoneNumber.trim() !== '' && this.newAddress.trim() !== '') {
-        this.addresses.push({
-          contactName: this.newContactName,
-          phoneNumber: this.newPhoneNumber,
-          address: this.newAddress
-        });
-        this.newContactName = '';
-        this.newPhoneNumber = '';
-        this.newAddress = '';
-        this.addingNewAddress = false;
-        this.moreAddressesVisible = true;
-      }
-    },
-    cancelAddAddress() {
-      this.newContactName = '';
-      this.newPhoneNumber = '';
-      this.newAddress = '';
-      this.addingNewAddress = false;
-    },
-    selectDefaultAddress(index) {
-      this.selectedAddressIndex = index;
-      this.selectedShippingInfo = {
-        address: this.addresses[index].address,
-        contactName: this.addresses[index].contactName,
-        phoneNumber: this.addresses[index].phoneNumber,
-        addressid: index + 1  // 假设 addressid 与索引相关
-      };
-      this.moreAddressesVisible = false; // 收起更多地址列表
-    },
-    calculateSubtotal() {
-      return this.shoppingCart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
+
+    saveShippingInfo() {
+      this.selectedShippingInfo = { ...this.newShippingInfo }; // 更新选中的地址信息
+      this.editingShippingInfo = false;
     }
   }
 };
